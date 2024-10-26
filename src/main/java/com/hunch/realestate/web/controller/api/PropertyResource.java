@@ -117,7 +117,7 @@ public class PropertyResource {
                 fields.put("fields", List.of("평수", "층수", "방향", "주차가능여부"));
                 break;
             case ONE_ROOM, TWOTHREE_ROOM:
-                fields.put("fields", List.of("평수", "층수", "방향", "복층여부"));
+                fields.put("fields", List.of("평수", "층수", "방향", "복층여부", "주차가능여부"));
                 break;
             case COMMERCIAL:
                 fields.put("fields", List.of("평수", "층수", "엘리베이터", "주차가능여부"));
