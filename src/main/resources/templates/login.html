@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>범부동산 관리자시스템</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #364150;
+            color: #fff;
+        }
+
+        .login-container {
+            margin-top: 10%;
+            padding: 30px;
+            max-width: 420px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 7px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-control {
+            height: 43px;
+            padding-left: 43px;
+            background-color: #404c5a;
+            border: 1px solid #4a5361;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            background-color: #404c5a;
+            border-color: #5b9bd1;
+            color: #fff;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 13px;
+            top: 11px;
+            color: #6c757d;
+        }
+
+        .form-actions {
+            padding: 20px 0;
+            border-bottom: 1px solid #4a5361;
+            margin-bottom: 20px;
+        }
+
+        .btn-login {
+            background-color: #5b9bd1;
+            border-color: #5b9bd1;
+            color: #fff;
+            padding: 10px 30px;
+            width: 100%;
+        }
+
+        .btn-login:hover {
+            background-color: #3175af;
+            border-color: #3175af;
+        }
+
+        .forget-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forget-password a {
+            color: #5b9bd1;
+            text-decoration: none;
+        }
+
+        .create-account {
+            text-align: center;
+            margin-top: 20px;
+            color: #c3ccd8;
+        }
+
+        .create-account a {
+            color: #5b9bd1;
+            text-decoration: none;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            color: #c3ccd8;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="login-container mx-auto">
+        <h3 class="form-title">관리자시스템</h3>
+
+        <form th:action="@{/login}" method="post">
+            <!-- 에러 메시지 -->
+            <div th:if="${errorMsg}" class="alert alert-danger">
+                <p th:text="${errorMsg}"></p>
+            </div>
+            <div th:if="${logoutMsg}" class="alert alert-success">
+                <p th:text="${logoutMsg}"></p>
+            </div>
+
+            <!-- 아이디 입력 -->
+            <div class="form-group">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="form-control" name="username" placeholder="아이디" required>
+            </div>
+
+            <!-- 비밀번호 입력 -->
+            <div class="form-group">
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password" class="form-control" name="password" placeholder="비밀번호" required>
+            </div>
+
+            <div class="form-actions">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember-me">
+                    <label class="form-check-label" for="rememberMe">아이디 기억하기</label>
+                </div>
+                <button type="submit" class="btn btn-login">로그인</button>
+            </div>
+        </form>
+
+        <div class="forget-password">
+            <h4>비밀번호를 분실하셨습니까?</h4>
+            <p>비밀번호를 초기화 하시려면 <a href="javascript:;" id="forget-password">이곳을</a> 클릭하여 주시기 바랍니다.</p>
+        </div>
+
+        <div class="create-account">
+            직원계정을 신청 하시겠습니까? <a href="javascript:;" id="register-btn">계정신청</a>
+        </div>
+    </div>
+
+    <div class="copyright">
+<!--        <span class="sample">IP: <span th:text="${#request.remoteAddr}"></span></span><br>-->
+        2024 © powered by <a href="http://www.beomproperty.com" target="_blank" style="text-decoration:underline;">beomproperty.com</a>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

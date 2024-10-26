@@ -1,0 +1,40 @@
+<!-- /templates/fragments/scripts.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="scriptsFragment">
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <!-- 공통 스크립트 -->
+    <script>
+        $(document).ready(function() {
+            // 사이드바 토글 상태 저장
+            $('.nav-link[data-widget="pushmenu"]').on('click', function() {
+                localStorage.setItem('sidebarState', $('body').hasClass('sidebar-collapse'));
+            });
+
+            // 저장된 사이드바 상태 복원
+            if (localStorage.getItem('sidebarState') === 'true') {
+                $('body').addClass('sidebar-collapse');
+            }
+            
+            // DataTables 기본 설정
+            $.extend(true, $.fn.dataTable.defaults, {
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Korean.json"
+                },
+                pageLength: 10,
+                lengthChange: false
+            });
+        });
+    </script>
+    <!-- 추가 스크립트 -->
+    <th:block th:replace="${additionalScripts}" />
+</th:block>
+</html>

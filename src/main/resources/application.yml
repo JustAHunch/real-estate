@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: real-estate
+  config:
+    import: "optional:configserver:"
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+# ?????? ??
+app:
+  storage:
+    # Windows ??? ?? ?? ??
+#    base-path: C:/real-estate/data
+    base-path: C:/git/study/real-estate/data
+    # JSON ?? ?? ??
+    json:
+      users: ${app.storage.base-path}/users.json
+      properties: ${app.storage.base-path}/properties.json
+      transactions: ${app.storage.base-path}/transactions.json
+    # ?? ??? ?? ??
+    files:
+      images: ${app.storage.base-path}/images
+      documents: ${app.storage.base-path}/documents
+
+logging:
+  level:
+    root: INFO
+    com.hunch.realestate: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

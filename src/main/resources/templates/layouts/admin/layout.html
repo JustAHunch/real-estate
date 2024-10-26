@@ -1,0 +1,45 @@
+<!-- /templates/layouts/admin/layout.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/head :: headFragment">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <div th:replace="fragments/navbar :: navbarFragment"></div>
+        
+        <!-- Sidebar -->
+        <div th:replace="fragments/sidebar :: sidebarFragment"></div>
+        
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0" th:text="${pageTitle}">페이지 제목</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div layout:fragment="content">
+                        <!-- 각 페이지의 내용이 여기에 들어갑니다 -->
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Footer -->
+        <div th:replace="fragments/footer :: footerFragment"></div>
+    </div>
+    
+    <!-- Scripts -->
+    <div th:replace="fragments/scripts :: scriptsFragment"></div>
+</body>
+</html>
