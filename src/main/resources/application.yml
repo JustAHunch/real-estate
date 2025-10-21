@@ -4,6 +4,31 @@ spring:
   config:
     import: "optional:configserver:"
 
+  # JPA & Database 설정 (PostgreSQL)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/realestate
+    driver-class-name: org.postgresql.Driver
+    username: beom_realestate
+    password: beomrealestate12#$
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    defer-datasource-initialization: false
+
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
@@ -22,18 +47,17 @@ server:
       charset: UTF-8
       force: true
 
-# ?????? ??
+# 파일 저장 경로
 app:
   storage:
-    # Windows ??? ?? ?? ??
-#    base-path: C:/real-estate/data
+    # Windows 환경 경로 설정
     base-path: C:/git/study/real-estate/data
-    # JSON ?? ?? ??
+    # JSON 파일 저장 경로
     json:
       users: ${app.storage.base-path}/users.json
       properties: ${app.storage.base-path}/properties.json
       transactions: ${app.storage.base-path}/transactions.json
-    # ?? ??? ?? ??
+    # 업로드 파일 저장 경로
     files:
       images: ${app.storage.base-path}/images
       documents: ${app.storage.base-path}/documents
@@ -42,5 +66,7 @@ logging:
   level:
     root: INFO
     com.hunch.realestate: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

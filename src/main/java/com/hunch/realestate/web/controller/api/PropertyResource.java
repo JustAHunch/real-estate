@@ -1,6 +1,7 @@
 package com.hunch.realestate.web.controller.api;
 
 import com.hunch.realestate.common.enums.PropertyType;
+import com.hunch.realestate.domain.dto.PagingResult;
 import com.hunch.realestate.domain.dto.PropertyDTO;
 import com.hunch.realestate.service.PropertyService;
 import lombok.RequiredArgsConstructor;
@@ -10,22 +11,55 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * 매물 관리 REST API 컨트롤러
+ */
 @Slf4j
 @RestController
+@RequestMapping("/api/v1/admin/properties")
 @RequiredArgsConstructor
 public class PropertyResource {
 
     private final PropertyService propertyService;
 
     /**
+     * 매물 목록 조회 (API)
+     */
+    @GetMapping
+    public ResponseEntity<PagingResult<PropertyDTO>> getProperties(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) PropertyType type) {
+        try {
+            PagingResult<PropertyDTO> result = propertyService.getProperties(type, page, size);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("매물 목록 조회 중 오류 발생: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 매물 상세 조회 (API)
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<PropertyDTO> getProperty(@PathVariable String id) {
+        try {
+            PropertyDTO property = propertyService.getProperty(id);
+            return ResponseEntity.ok(property);
+        } catch (Exception e) {
+            log.error("매물 조회 중 오류 발생: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    /**
      * 매물 등록
      */
-    @PostMapping("/api/v1/admin/properties")
+    @PostMapping
     public ResponseEntity<?> registerProperty(
             @ModelAttribute PropertyDTO propertyDTO,
             @RequestParam(required = false) List<MultipartFile> images) {
@@ -37,7 +71,7 @@ public class PropertyResource {
 
         try {
             propertyService.register(propertyDTO, images);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("매물이 등록되었습니다.");
         } catch (Exception e) {
             log.error("매물 등록 중 오류 발생: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -48,9 +82,9 @@ public class PropertyResource {
     /**
      * 매물 수정
      */
-    @PutMapping("/api/v1/admin/properties/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateProperty(
-            @PathVariable Long id,
+            @PathVariable String id,
             @ModelAttribute PropertyDTO propertyDTO,
             @RequestParam(required = false) List<MultipartFile> images) {
 
@@ -61,7 +95,7 @@ public class PropertyResource {
 
         try {
             propertyService.update(id, propertyDTO, images);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("매물이 수정되었습니다.");
         } catch (Exception e) {
             log.error("매물 수정 중 오류 발생: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -72,11 +106,11 @@ public class PropertyResource {
     /**
      * 매물 삭제
      */
-    @DeleteMapping("/api/v1/admin/properties/{id}")
-    public ResponseEntity<String> deleteProperty(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProperty(@PathVariable String id) {
         try {
             propertyService.delete(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("매물이 삭제되었습니다.");
         } catch (Exception e) {
             log.error("매물 삭제 중 오류 발생: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -87,48 +121,69 @@ public class PropertyResource {
     /**
      * 이미지 삭제
      */
-    @DeleteMapping("/api/v1/admin/properties/images/{propertyId}/{filename}")
-    public ResponseEntity<Void> deleteImage(
+    @DeleteMapping("/images/{propertyId}/{filename}")
+    public ResponseEntity<String> deleteImage(
             @PathVariable String propertyId,
             @PathVariable String filename) {
         try {
             propertyService.deleteImage(propertyId, filename);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("이미지가 삭제되었습니다.");
         } catch (Exception e) {
             log.error("이미지 삭제 중 오류 발생: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("이미지 삭제 중 오류가 발생했습니다.");
         }
     }
 
     /**
      * 매물 타입별 추가 필드 조회
      */
-    @GetMapping("/api/v1/admin/properties/property-type-fields")
-    public ResponseEntity<Map<String, List<String>>> getPropertyTypeFields(
+    @GetMapping("/property-type-fields")
+    public ResponseEntity<Map<String, Object>> getPropertyTypeFields(
             @RequestParam String type) {
-        Map<String, List<String>> fields = new HashMap<>();
+        try {
+            PropertyType propertyType = PropertyType.valueOf(type.toUpperCase());
+            Map<String, Object> response = new HashMap<>();
 
-        PropertyType propertyType = PropertyType.valueOf(type);
-        switch (propertyType) {
-            case APARTMENT:
-                fields.put("fields", List.of("평수", "층수", "방향", "현관구조"));
-                break;
-            case VILLA:
-                fields.put("fields", List.of("평수", "층수", "방향", "주차가능여부"));
-                break;
-            case ONE_ROOM, TWOTHREE_ROOM:
-                fields.put("fields", List.of("평수", "층수", "방향", "복층여부", "주차가능여부"));
-                break;
-            case COMMERCIAL:
-                fields.put("fields", List.of("평수", "층수", "엘리베이터", "주차가능여부"));
-                break;
-            case STORE:
-                fields.put("fields", List.of("평수", "층수", "업종제한"));
-                break;
-            default:
-                fields.put("fields", new ArrayList<>());
+            // 필드 정보를 더 상세하게 제공
+            List<Map<String, Object>> fieldDetails = propertyType.getFields().stream()
+                    .map(field -> {
+                        Map<String, Object> fieldInfo = new HashMap<>();
+                        fieldInfo.put("displayName", field.getDisplayName());
+                        fieldInfo.put("fieldName", field.getFieldName());
+                        fieldInfo.put("fieldType", field.getFieldType());
+                        fieldInfo.put("options", Arrays.asList(field.getOptionArray()));
+                        return fieldInfo;
+                    })
+                    .collect(Collectors.toList());
+
+            response.put("fields", fieldDetails);
+            response.put("displayNames", propertyType.getFieldDisplayNames());
+            response.put("fieldNames", propertyType.getFieldNames());
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 매물 타입: {}", type);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "잘못된 매물 타입입니다.");
+            errorResponse.put("validTypes", Arrays.stream(PropertyType.values())
+                    .map(Enum::name)
+                    .toList());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
+    }
 
-        return ResponseEntity.ok(fields);
+    /**
+     * 통계 - 전체 매물 개수
+     */
+    @GetMapping("/statistics/total-count")
+    public ResponseEntity<Map<String, Long>> getTotalCount() {
+        try {
+            long totalCount = propertyService.getTotalCount();
+            return ResponseEntity.ok(Map.of("totalCount", totalCount));
+        } catch (Exception e) {
+            log.error("매물 통계 조회 중 오류 발생: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

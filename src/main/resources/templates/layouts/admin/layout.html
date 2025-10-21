@@ -1,45 +1,104 @@
-<!-- /templates/layouts/admin/layout.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:replace="fragments/head :: headFragment">
-</head>
-<body class="hold-transition sidebar-mini">
-    <div class="wrapper">
-        <!-- Navbar -->
-        <div th:replace="fragments/navbar :: navbarFragment"></div>
-        
-        <!-- Sidebar -->
-        <div th:replace="fragments/sidebar :: sidebarFragment"></div>
-        
-        <!-- Content -->
-        <div class="content-wrapper">
-            <!-- Content Header -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0" th:text="${pageTitle}">페이지 제목</h1>
-                        </div>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head}"></head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0" th:text="${pageTitle != null ? pageTitle : '페이지'}">페이지 제목</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}"><i class="fas fa-home"></i> 홈</a></li>
+                            <li class="breadcrumb-item active" th:text="${pageTitle != null ? pageTitle : '페이지'}">현재 페이지</li>
+                        </ol>
                     </div>
                 </div>
             </div>
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <div layout:fragment="content">
-                        <!-- 각 페이지의 내용이 여기에 들어갑니다 -->
-                    </div>
-                </div>
-            </section>
         </div>
+        <!-- /.content-header -->
         
-        <!-- Footer -->
-        <div th:replace="fragments/footer :: footerFragment"></div>
+        <!-- Alert Messages -->
+        <div class="container-fluid" th:if="${message != null or error != null or warning != null or info != null}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${message != null}">
+                <i class="icon fas fa-check"></i>
+                <span th:text="${message}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${error != null}">
+                <i class="icon fas fa-ban"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${warning != null}">
+                <i class="icon fas fa-exclamation-triangle"></i>
+                <span th:text="${warning}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-info alert-dismissible fade show" role="alert" th:if="${info != null}">
+                <i class="icon fas fa-info"></i>
+                <span th:text="${info}"></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <!-- /.alert-messages -->
+        
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- 페이지별 컨텐츠가 여기에 삽입됩니다 -->
+                <div layout:fragment="content">
+                    <p>Content goes here</p>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
     
-    <!-- Scripts -->
-    <div th:replace="fragments/scripts :: scriptsFragment"></div>
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            <h5>설정</h5>
+            <p>사이드바 설정 내용이 여기에 표시됩니다.</p>
+        </div>
+    </aside>
+    <!-- /.control-sidebar -->
+    
+</div>
+<!-- ./wrapper -->
+
+<!-- Scripts -->
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+
+<!-- Page specific scripts -->
+<th:block layout:fragment="scripts"></th:block>
+
 </body>
 </html>

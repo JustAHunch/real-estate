@@ -18,7 +18,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropertyDTO {
-    private Long id;
+    private String id;
     private PropertyType propertyType;
     private String address;
     private String detailAddress;

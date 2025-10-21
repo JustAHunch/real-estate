@@ -3,13 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${pageTitle != null ? pageTitle + ' - 범부동산 관리 시스템' : '범부동산 관리 시스템'}">범부동산 관리 시스템</title>
+    <title th:text="${pageTitle != null ? pageTitle + ' - 부동산 관리 시스템' : '부동산 관리 시스템'}">부동산 관리 시스템</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    
-    <!-- Noto Sans KR (한글 폰트) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,10 +26,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap4-theme@1.5.4/dist/select2-bootstrap4.min.css">
     
-    <!-- iCheck Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/icheck-bootstrap@3.0.1/icheck-bootstrap.min.css">
-    
-    <!-- Custom CSS -->
+    <!-- Custom CSS (추가 스타일링이 필요한 경우) -->
     <style>
         /* 한글 폰트 개선 */
         body {
@@ -71,57 +65,10 @@
         }
         
         /* 버튼 호버 효과 */
-        .btn {
-            transition: all 0.3s ease;
-        }
-        
         .btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 2px 5px rgba(0,0,0,.2);
         }
-        
-        /* 폼 입력 필드 스타일 */
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        }
-        
-        /* 배지 스타일 개선 */
-        .badge {
-            font-weight: 500;
-            padding: 0.35em 0.6em;
-        }
-        
-        /* 이미지 썸네일 */
-        .img-thumbnail {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .img-thumbnail:hover {
-            transform: scale(1.05);
-        }
-        
-        /* 테이블 액션 버튼 */
-        .table .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-        
-        /* Select2 드롭다운 z-index */
-        .select2-container {
-            z-index: 9999;
-        }
-        
-        /* 반응형 테이블 */
-        @media (max-width: 768px) {
-            .table-responsive {
-                font-size: 0.875rem;
-            }
-        }
     </style>
-    
-    <!-- 추가 CSS -->
-    <th:block th:replace="${additionalStyles}" />
 </head>
 </html>

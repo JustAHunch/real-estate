@@ -1,0 +1,75 @@
+spring:
+  # 프로덕션 환경 PostgreSQL 설정
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/realestate}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 프로덕션에서는 validate 사용 (테이블 변경 방지)
+    show-sql: false  # 프로덕션에서는 SQL 로그 비활성화
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        use_sql_comments: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  # Thymeleaf 캐시 활성화
+  thymeleaf:
+    cache: true
+
+  # DevTools 비활성화
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+
+# 파일 저장 경로 (환경변수로 설정 권장)
+app:
+  storage:
+    base-path: ${STORAGE_BASE_PATH:C:/realestate/data}
+    json:
+      users: ${app.storage.base-path}/users.json
+      properties: ${app.storage.base-path}/properties.json
+      transactions: ${app.storage.base-path}/transactions.json
+    files:
+      images: ${app.storage.base-path}/images
+      documents: ${app.storage.base-path}/documents
+
+logging:
+  level:
+    root: WARN
+    com.hunch.realestate: INFO
+    org.hibernate.SQL: WARN
+  file:
+    name: ${LOG_PATH:C:/realestate/logs}/application.log
+    max-size: 10MB
+    max-history: 30
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -1,10 +1,24 @@
-<!-- /templates/fragments/footer.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<footer th:fragment="footerFragment" class="main-footer">
-    <div class="float-right d-none d-sm-block">
-        <b>Version</b> 1.0.0
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="footer">
+<body>
+<!-- Main Footer -->
+<footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+        Version 1.0.0
     </div>
-    <strong>Copyright &copy; 2024 관리자 시스템.</strong>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2025 <a href="#">부동산관리시스템</a>.</strong> All rights reserved.
 </footer>
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+        <h5>설정</h5>
+        <p>여기에 설정 옵션을 추가할 수 있습니다.</p>
+    </div>
+</aside>
+<!-- /.control-sidebar -->
+</body>
 </html>

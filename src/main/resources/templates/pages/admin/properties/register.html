@@ -1,331 +1,742 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/admin/layout}">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>매물 등록 - 범부동산 관리자</title>
+    <title>매물 등록 - 범부동산</title>
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css">
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
+
+    <!-- Summernote CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css">
+
+    <!-- Bootstrap DateTimePicker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css">
+
+    <style>
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 0.375rem;
+            padding: 3rem;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .image-upload-area:hover {
+            border-color: #007bff;
+            background-color: #e3f2fd;
+        }
+
+        .image-upload-area.dragover {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            border: 2px solid #dee2e6;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-remove:hover {
+            background: rgba(220, 53, 69, 1);
+        }
+
+        .progress-steps {
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: #e9ecef;
+            border-right: 1px solid #dee2e6;
+            position: relative;
+        }
+
+        .progress-step:first-child {
+            border-radius: 0.375rem 0 0 0.375rem;
+        }
+
+        .progress-step:last-child {
+            border-radius: 0 0.375rem 0.375rem 0;
+            border-right: none;
+        }
+
+        .progress-step.active {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        .progress-step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: block;
+        }
+
+        .form-control.is-invalid,
+        .select2-container .select2-selection.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .select2-container--bootstrap .select2-selection {
+            border-color: #ced4da;
+        }
+    </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-            </li>
-        </ul>
-    </nav>
 
-    <!-- Sidebar -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <a href="/admin/dashboard" class="brand-link">
-            <span class="brand-text font-weight-light">범부동산 관리자</span>
-        </a>
-        <div class="sidebar">
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <img src="/api/placeholder/160/160" class="img-circle elevation-2" alt="User Image">
+<body>
+    <!-- Content Header -->
+    <section layout:fragment="content-header" class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><i class="fas fa-plus-circle mr-2"></i>매물 등록</h1>
                 </div>
-                <div class="info">
-                    <a href="#" class="d-block">관리자명</a>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/properties">매물 목록</a></li>
+                        <li class="breadcrumb-item active">매물 등록</li>
+                    </ol>
                 </div>
             </div>
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item">
-                        <a href="/admin/dashboard" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>대시보드</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/pages/admin/properties" class="nav-link">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>매물 관리</p>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
         </div>
-    </aside>
+    </section>
 
-    <!-- Content Wrapper -->
-    <div class="content-wrapper">
-        <section class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1>매물 등록</h1>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">매물 등록</li>
-                        </ol>
-                    </div>
+    <!-- Main Content -->
+    <section layout:fragment="content" class="content">
+        <div class="container-fluid">
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="progress-step active" id="step1">
+                    <i class="fas fa-info-circle mr-2"></i>기본 정보
+                </div>
+                <div class="progress-step" id="step2">
+                    <i class="fas fa-won-sign mr-2"></i>가격 정보
+                </div>
+                <div class="progress-step" id="step3">
+                    <i class="fas fa-images mr-2"></i>이미지 등록
                 </div>
             </div>
-        </section>
 
-        <!-- Main Content -->
-        <section class="content">
-            <div class="container-fluid">
-                <form method="post" enctype="multipart/form-data" id="propertyForm">
-                    <!-- 매물 정보 카드 -->
-                    <div class="card card-primary">
+            <form id="propertyRegisterForm" enctype="multipart/form-data" novalidate>
+                <!-- Step 1: 기본 정보 -->
+                <div class="step-content" id="stepContent1">
+                    <!-- 매물 기본 정보 -->
+                    <div class="card form-section">
                         <div class="card-header">
-                            <h3 class="card-title">매물 정보</h3>
+                            <h3 class="card-title"><i class="fas fa-building mr-2"></i>매물 기본 정보</h3>
                         </div>
                         <div class="card-body">
-                            <div class="form-group">
-                                <label>매물 종류 <span class="required">*</span></label>
-                                <select name="propertyType" class="form-control" required>
-                                    <option value="">::선택::</option>
-                                    <option th:each="type : ${T(com.hunch.realestate.common.enums.PropertyType).values()}"
-                                            th:value="${type.name()}"
-                                            th:text="${type.description}">아파트</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>거래 종류 <span class="required">*</span></label>
-                                <div class="btn-group">
-                                    <label class="btn btn-outline-primary">
-                                        <input type="radio" name="transactionType" value="SALE" required> 매매
-                                    </label>
-                                    <label class="btn btn-outline-primary">
-                                        <input type="radio" name="transactionType" value="JEONSE"> 전세
-                                    </label>
-                                    <label class="btn btn-outline-primary">
-                                        <input type="radio" name="transactionType" value="MONTHLY"> 월세
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>가격 <span class="required">*</span></label>
-                                <input type="number" class="form-control" placeholder="가격 입력">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="propertyTypeFields">
-                    </div>
-                    <!-- 위치 정보 카드 -->
-                    <div class="card card-info">
-                        <div class="card-header">
-                            <h3 class="card-title">위치 정보</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>주소 <span class="required">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="주소 입력" readonly>
-                                    <div class="input-group-append">
-                                        <button type="button" class="btn btn-secondary">주소 검색</button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="required-field">매물 종류</label>
+                                        <select class="form-control select2" name="propertyType" id="propertyType" required>
+                                            <option value="">매물 종류를 선택하세요</option>
+                                            <option value="APARTMENT">아파트</option>
+                                            <option value="VILLA">빌라</option>
+                                            <option value="ONE_ROOM">원룸</option>
+                                            <option value="TWOTHREE_ROOM">투룸/쓰리룸</option>
+                                            <option value="COMMERCIAL">상가/사무실</option>
+                                            <option value="STORE">점포</option>
+                                        </select>
+                                        <div class="invalid-feedback">매물 종류를 선택해주세요.</div>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control mt-2" placeholder="상세 주소 입력">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="required-field">거래 유형</label>
+                                        <select class="form-control select2" name="transactionType" required>
+                                            <option value="">거래 유형을 선택하세요</option>
+                                            <option value="SALE">매매</option>
+                                            <option value="JEONSE">전세</option>
+                                            <option value="MONTHLY">월세</option>
+                                        </select>
+                                        <div class="invalid-feedback">거래 유형을 선택해주세요.</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="map" style="height: 300px;"></div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="required-field">주소</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="address" placeholder="기본 주소를 입력하세요" required>
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-outline-secondary" id="addressSearchBtn">
+                                                    <i class="fas fa-search"></i> 주소 검색
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback">주소를 입력해주세요.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>상세 주소</label>
+                                        <input type="text" class="form-control" name="detailAddress" placeholder="상세 주소를 입력하세요">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 사진 등록 카드 -->
-                    <div class="card">
+                    <!-- 추가 정보 (동적 필드) -->
+                    <div class="card form-section">
                         <div class="card-header">
-                            <h3 class="card-title">사진 등록</h3>
+                            <h3 class="card-title"><i class="fas fa-cogs mr-2"></i>추가 정보</h3>
+                        </div>
+                        <div class="card-body" id="dynamicFields">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                매물 종류를 선택하면 해당하는 추가 정보 필드가 표시됩니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: 가격 정보 -->
+                <div class="step-content" id="stepContent2" style="display: none;">
+                    <div class="card form-section">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-won-sign mr-2"></i>가격 정보</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>매매가</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="price" placeholder="0" min="0">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">만원</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>보증금</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="deposit" placeholder="0" min="0">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">만원</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>월세</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="monthlyRent" placeholder="0" min="0">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">만원</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>관리비</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" name="maintenanceFee" placeholder="0" min="0">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">만원</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>입주 가능일</label>
+                                        <input type="date" class="form-control" name="moveInDate">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 상세 설명 -->
+                    <div class="card form-section">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-align-left mr-2"></i>상세 설명</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label>매물 사진</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="images" multiple>
-                                    <label class="custom-file-label">파일 선택</label>
-                                </div>
+                                <label>매물 설명</label>
+                                <textarea id="summernote" name="description" class="form-control"></textarea>
                             </div>
-                            <div id="imagePreview" class="row mt-3"></div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- 버튼 영역 -->
-                    <div class="card-footer text-center">
-                        <button type="submit" class="btn btn-primary">매물 등록하기</button>
-                        <a href="#" class="btn btn-default">취소</a>
+                <!-- Step 3: 이미지 등록 -->
+                <div class="step-content" id="stepContent3" style="display: none;">
+                    <div class="card form-section">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-images mr-2"></i>매물 이미지</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="image-upload-area" id="imageUploadArea">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <h4 class="text-muted">이미지를 업로드하세요</h4>
+                                <p class="text-muted mb-0">클릭하거나 이미지를 여기로 드래그하세요</p>
+                                <p class="text-muted"><small>JPG, PNG 파일만 업로드 가능 (최대 10MB)</small></p>
+                                <input type="file" id="imageFiles" name="images" multiple accept="image/*" style="display: none;">
+                            </div>
+                            <div class="image-preview-container" id="imagePreviewContainer"></div>
+                        </div>
                     </div>
-                </form>
-            </div>
-        </section>
-    </div>
+                </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <strong>Copyright &copy; 2024 <a href="http://beomproperty.com">범부동산</a>.</strong>
-        All rights reserved.
-    </footer>
-</div>
+                <!-- Navigation Buttons -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">
+                                    <i class="fas fa-chevron-left mr-2"></i>이전
+                                </button>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button type="button" class="btn btn-primary" id="nextBtn">
+                                    다음 <i class="fas fa-chevron-right ml-2"></i>
+                                </button>
+                                <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                                    <i class="fas fa-save mr-2"></i>등록하기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
 
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/js/adminlte.min.js"></script>
-<!--    <script src="./js/register.js"></script>-->
-<script>
-    $(function() {
-        // 거래 유형에 따른 가격 입력 영역 표시/숨김
-        $('input[name="transactionType"]').on('change', function() {
-            $('#sell_price_area, #lease_price_section, #monthly_price_area').hide();
-            switch($(this).val()) {
-                case 'SALE':
-                    $('#sell_price_area').show();
-                    break;
-                case 'JEONSE':
-                    $('#lease_price_section').show();
-                    break;
-                case 'MONTHLY':
-                    $('#monthly_price_area').show();
-                    break;
+    <!-- Scripts -->
+    <th:block layout:fragment="scripts">
+        <!-- Summernote -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/lang/summernote-ko-KR.min.js"></script>
+
+        <script>
+        $(document).ready(function() {
+            let currentStep = 1;
+            const totalSteps = 3;
+            let selectedImages = [];
+
+            // Initialize components
+            initializeSelect2();
+            initializeSummernote();
+            initializeImageUpload();
+            initializeStepNavigation();
+            initializeFormValidation();
+            initializeDynamicFields();
+
+            // Select2 초기화
+            function initializeSelect2() {
+                $('.select2').select2({
+                    theme: 'bootstrap',
+                    width: '100%'
+                });
             }
-        });
 
-        // 매물 유형별 추가 필드 로드
-        $('select[name="propertyType"]').on('change', function() {
-            var selectedType = $(this).val();
-            if (selectedType) {
-                $.ajax({
-                    url: '/api/v1/admin/properties/property-type-fields',
-                    type: 'GET',
-                    data: { type: selectedType },
-                    success: function(response) {
-                        var fieldsHtml = '<div class="card">' +
-                            '<div class="card-header">' +
-                            '<h3 class="card-title">매물 상세 정보</h3>' +
-                            '</div>' +
-                            '<div class="card-body">';
+            // Summernote 초기화
+            function initializeSummernote() {
+                $('#summernote').summernote({
+                    height: 300,
+                    lang: 'ko-KR',
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+            }
 
-                        $.each(response.fields, function(i, field) {
-                            fieldsHtml += '<div class="form-group">' +
-                                '<label>' + field + '</label>' +
-                                '<div class="col-md-10">' +
-                                '<input type="text" class="form-control" name="additionalFields[' + field + ']">' +
-                                '</div>' +
-                                '</div>';
-                        });
+            // 이미지 업로드 초기화
+            function initializeImageUpload() {
+                const uploadArea = $('#imageUploadArea');
+                const fileInput = $('#imageFiles');
 
-                        fieldsHtml += '</div></div>';
-                        $('#propertyTypeFields').html(fieldsHtml);
+                // 클릭 이벤트
+                uploadArea.on('click', function() {
+                    fileInput.click();
+                });
+
+                // 파일 선택 이벤트
+                fileInput.on('change', function() {
+                    handleFiles(this.files);
+                });
+
+                // 드래그 앤 드롭 이벤트
+                uploadArea.on('dragover', function(e) {
+                    e.preventDefault();
+                    $(this).addClass('dragover');
+                });
+
+                uploadArea.on('dragleave', function(e) {
+                    e.preventDefault();
+                    $(this).removeClass('dragover');
+                });
+
+                uploadArea.on('drop', function(e) {
+                    e.preventDefault();
+                    $(this).removeClass('dragover');
+                    const files = e.originalEvent.dataTransfer.files;
+                    handleFiles(files);
+                });
+            }
+
+            // 파일 처리 함수
+            function handleFiles(files) {
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        if (file.size <= 10 * 1024 * 1024) { // 10MB 제한
+                            addImagePreview(file);
+                        } else {
+                            showNotification('파일 크기가 너무 큽니다. (최대 10MB)', 'error');
+                        }
+                    } else {
+                        showNotification('이미지 파일만 업로드할 수 있습니다.', 'error');
                     }
                 });
-            } else {
-                $('#propertyTypeFields').empty();
-            }
-        });
-
-        // 이미지 프리뷰
-        $('input[name="images"]').on('change', function() {
-            var $preview = $('#imagePreview');
-            $preview.empty();
-
-            var files = $(this)[0].files;
-            var maxFiles = Math.min(files.length, 10);
-
-            for (var i = 0; i < maxFiles; i++) {
-                (function(file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        var $div = $('<div>').addClass('col-md-3 mb-3').appendTo($preview);
-                        var $card = $('<div>').addClass('card').appendTo($div);
-                        $('<img>')
-                            .addClass('card-img-top')
-                            .attr('src', e.target.result)
-                            .attr('alt', 'Preview')
-                            .appendTo($card);
-                        var $cardBody = $('<div>').addClass('card-body p-2').appendTo($card);
-                        $('<button>')
-                            .addClass('btn btn-sm btn-danger w-100 remove-image')
-                            .text('삭제')
-                            .on('click', function() {
-                                $(this).closest('.col-md-3').remove();
-                            })
-                            .appendTo($cardBody);
-                    };
-                    reader.readAsDataURL(file);
-                })(files[i]);
             }
 
-            // 파일명 표시
-            var fileNames = Array.from(files).map(file => file.name).join(', ');
-            $(this).next('.custom-file-label').text(fileNames || '파일 선택');
-        });
+            // 이미지 미리보기 추가
+            function addImagePreview(file) {
+                const reader = new FileReader();
+                const imageId = 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
-        // 폼 제출
-        $('#propertyForm').on('submit', function(e) {
-            e.preventDefault();
+                reader.onload = function(e) {
+                    const previewHtml = `
+                        <div class="image-preview" data-image-id="${imageId}">
+                            <img src="${e.target.result}" alt="이미지 미리보기">
+                            <button type="button" class="image-remove" onclick="removeImage('${imageId}')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    $('#imagePreviewContainer').append(previewHtml);
+                    selectedImages.push({id: imageId, file: file});
+                };
 
-            var formData = new FormData(this);
+                reader.readAsDataURL(file);
+            }
 
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    alert('매물이 성공적으로 등록되었습니다.');
-                    window.location.href = '/pages/admin/properties';
-                },
-                error: function(xhr) {
-                    var errors = xhr.responseJSON;
-                    if (errors) {
-                        var errorMessage = '';
-                        $.each(errors, function(field, message) {
-                            errorMessage += message + '\n';
-                        });
-                        alert(errorMessage || '매물 등록 중 오류가 발생했습니다.');
-                    } else {
-                        alert('매물 등록 중 오류가 발생했습니다.');
+            // 이미지 제거
+            window.removeImage = function(imageId) {
+                $(`.image-preview[data-image-id="${imageId}"]`).remove();
+                selectedImages = selectedImages.filter(img => img.id !== imageId);
+            };
+
+            // 단계별 네비게이션 초기화
+            function initializeStepNavigation() {
+                $('#nextBtn').on('click', function() {
+                    if (validateCurrentStep()) {
+                        nextStep();
                     }
+                });
+
+                $('#prevBtn').on('click', function() {
+                    prevStep();
+                });
+            }
+
+            // 다음 단계로
+            function nextStep() {
+                if (currentStep < totalSteps) {
+                    $(`#stepContent${currentStep}`).hide();
+                    $(`.progress-step:nth-child(${currentStep})`).removeClass('active').addClass('completed');
+
+                    currentStep++;
+                    $(`#stepContent${currentStep}`).show();
+                    $(`.progress-step:nth-child(${currentStep})`).addClass('active');
+
+                    updateNavigationButtons();
                 }
-            });
+            }
+
+            // 이전 단계로
+            function prevStep() {
+                if (currentStep > 1) {
+                    $(`#stepContent${currentStep}`).hide();
+                    $(`.progress-step:nth-child(${currentStep})`).removeClass('active');
+
+                    currentStep--;
+                    $(`#stepContent${currentStep}`).show();
+                    $(`.progress-step:nth-child(${currentStep})`).removeClass('completed').addClass('active');
+
+                    updateNavigationButtons();
+                }
+            }
+
+            // 네비게이션 버튼 업데이트
+            function updateNavigationButtons() {
+                $('#prevBtn').toggle(currentStep > 1);
+                $('#nextBtn').toggle(currentStep < totalSteps);
+                $('#submitBtn').toggle(currentStep === totalSteps);
+            }
+
+            // 현재 단계 유효성 검사
+            function validateCurrentStep() {
+                const currentStepElement = $(`#stepContent${currentStep}`);
+                let isValid = true;
+
+                // 필수 필드 검사
+                currentStepElement.find('[required]').each(function() {
+                    if (!this.checkValidity()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    showNotification('필수 항목을 모두 입력해주세요.', 'error');
+                }
+
+                return isValid;
+            }
+
+            // 폼 유효성 검사 초기화
+            function initializeFormValidation() {
+                $('#propertyRegisterForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    if (validateForm()) {
+                        submitForm();
+                    }
+                });
+
+                // 실시간 유효성 검사
+                $('input, select, textarea').on('blur change', function() {
+                    if (this.checkValidity()) {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+            }
+
+            // 전체 폼 유효성 검사
+            function validateForm() {
+                let isValid = true;
+
+                // 모든 필수 필드 검사
+                $('[required]').each(function() {
+                    if (!this.checkValidity()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    showNotification('필수 항목을 모두 입력해주세요.', 'error');
+                }
+
+                return isValid;
+            }
+
+            // 동적 필드 초기화
+            function initializeDynamicFields() {
+                $('#propertyType').on('change', function() {
+                    const propertyType = $(this).val();
+                    if (propertyType) {
+                        loadDynamicFields(propertyType);
+                    } else {
+                        $('#dynamicFields').html(`
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                매물 종류를 선택하면 해당하는 추가 정보 필드가 표시됩니다.
+                            </div>
+                        `);
+                    }
+                });
+            }
+
+            // 동적 필드 로드
+            function loadDynamicFields(propertyType) {
+                $.ajax({
+                    url: '/api/v1/admin/properties/property-type-fields',
+                    method: 'GET',
+                    data: { type: propertyType },
+                    success: function(response) {
+                        renderDynamicFields(response.fields);
+                    },
+                    error: function() {
+                        showNotification('추가 정보 필드를 불러오는데 실패했습니다.', 'error');
+                    }
+                });
+            }
+
+            // 동적 필드 렌더링
+            function renderDynamicFields(fields) {
+                let html = '<div class="row">';
+
+                fields.forEach((field, index) => {
+                    if (index % 2 === 0 && index !== 0) {
+                        html += '</div><div class="row">';
+                    }
+
+                    html += `<div class="col-md-6">
+                        <div class="form-group">
+                            <label>${field.displayName}</label>`;
+
+                    if (field.fieldType === 'select') {
+                        html += `<select class="form-control" name="${field.fieldName}">
+                            <option value="">선택하세요</option>`;
+                        field.options.forEach(option => {
+                            if (option) {
+                                html += `<option value="${option}">${option}</option>`;
+                            }
+                        });
+                        html += `</select>`;
+                    } else if (field.fieldType === 'number') {
+                        html += `<input type="number" class="form-control" name="${field.fieldName}" placeholder="${field.displayName}를 입력하세요">`;
+                    } else {
+                        html += `<input type="text" class="form-control" name="${field.fieldName}" placeholder="${field.displayName}를 입력하세요">`;
+                    }
+
+                    html += `</div></div>`;
+                });
+
+                html += '</div>';
+                $('#dynamicFields').html(html);
+            }
+
+            // 폼 제출
+            function submitForm() {
+                const formData = new FormData();
+
+                // 폼 데이터 수집
+                $('#propertyRegisterForm').find('input, select, textarea').each(function() {
+                    const name = $(this).attr('name');
+                    const value = $(this).val();
+
+                    if (name && value) {
+                        formData.append(name, value);
+                    }
+                });
+
+                // 이미지 파일 추가
+                selectedImages.forEach((imageData, index) => {
+                    formData.append('images', imageData.file);
+                });
+
+                // AJAX 제출
+                $.ajax({
+                    url: '/api/v1/admin/properties',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>등록 중...');
+                    },
+                    success: function(response) {
+                        showNotification('매물이 성공적으로 등록되었습니다.', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/admin/properties';
+                        }, 2000);
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.message || '매물 등록 중 오류가 발생했습니다.';
+                        showNotification(errorMsg, 'error');
+                    },
+                    complete: function() {
+                        $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save mr-2"></i>등록하기');
+                    }
+                });
+            }
+
+            // 알림 표시
+            function showNotification(message, type) {
+                const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+                const iconClass = type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle';
+
+                const notification = $(`
+                    <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                        <i class="fas ${iconClass} mr-2"></i>${message}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                `);
+
+                $('#propertyRegisterForm').prepend(notification);
+
+                // 3초 후 자동 제거
+                setTimeout(() => {
+                    notification.alert('close');
+                }, 3000);
+            }
         });
-
-        // 주소 검색 (카카오 우편번호 서비스)
-        window.searchAddress = function() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    $('input[name="address"]').val(data.address);
-                    $('input[name="detailAddress"]').focus();
-
-                    // 좌표 변환
-                    var geocoder = new kakao.maps.services.Geocoder();
-                    geocoder.addressSearch(data.address, function(result, status) {
-                        if (status === kakao.maps.services.Status.OK) {
-                            $('input[name="latitude"]').val(result[0].y);
-                            $('input[name="longitude"]').val(result[0].x);
-
-                            // 지도 표시
-                            var mapContainer = document.getElementById('map');
-                            var mapOption = {
-                                center: new kakao.maps.LatLng(result[0].y, result[0].x),
-                                level: 3
-                            };
-                            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                            // 마커 표시
-                            var marker = new kakao.maps.Marker({
-                                position: new kakao.maps.LatLng(result[0].y, result[0].x)
-                            });
-                            marker.setMap(map);
-                        }
-                    });
-                }
-            }).open();
-        };
-    });
-</script>
+        </script>
+    </th:block>
 </body>
 </html>

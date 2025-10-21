@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CompanyInfoService {
 
-    private final JsonStorageService jsonStorageService;
-
     /**
      * 부동산 정보 조회
      */
@@ -31,7 +29,7 @@ public class CompanyInfoService {
                     .managerPosition("대표(CEO)")
                     .managerName("홍길동")
                     .managerPhone("010-6565-9400")
-                    .managerPhoto("https://firebasestorage.googleapis.com/v0/b/insta-be9d9.appspot.com/o/INSTA-ESTATE%2F")
+                    .managerPhoto("")
                     .build();
         } catch (Exception e) {
             log.error("부동산 정보 조회 중 오류 발생: ", e);
