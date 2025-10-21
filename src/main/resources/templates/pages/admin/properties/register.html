@@ -3,18 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/admin/layout}">
 
-<head>
-    <title>매물 등록 - 범부동산</title>
-
+<th:block layout:fragment="styles">
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
 
     <!-- Summernote CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css">
-
-    <!-- Bootstrap DateTimePicker CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css">
 
     <style>
         .form-section {
@@ -136,30 +131,28 @@
             border-color: #ced4da;
         }
     </style>
-</head>
+</th:block>
 
-<body>
-    <!-- Content Header -->
-    <section layout:fragment="content-header" class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class="fas fa-plus-circle mr-2"></i>매물 등록</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
-                        <li class="breadcrumb-item"><a href="/admin/properties">매물 목록</a></li>
-                        <li class="breadcrumb-item active">매물 등록</li>
-                    </ol>
-                </div>
+<!-- Content Header -->
+<div layout:fragment="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><i class="fas fa-plus-circle mr-2"></i>매물 등록</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/properties">매물 목록</a></li>
+                    <li class="breadcrumb-item active">매물 등록</li>
+                </ol>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- Main Content -->
-    <section layout:fragment="content" class="content">
-        <div class="container-fluid">
+<!-- Main Content -->
+<div layout:fragment="content">
             <!-- Progress Steps -->
             <div class="progress-steps">
                 <div class="progress-step active" id="step1">
@@ -370,16 +363,16 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </section>
+</div>
 
-    <!-- Scripts -->
-    <th:block layout:fragment="scripts">
-        <!-- Summernote -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/lang/summernote-ko-KR.min.js"></script>
+<!-- Scripts -->
+<th:block layout:fragment="scripts">
+    <!-- Summernote -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/lang/summernote-ko-KR.min.js"></script>
 
         <script>
+        /*<![CDATA[*/
         $(document).ready(function() {
             let currentStep = 1;
             const totalSteps = 3;
@@ -736,6 +729,7 @@
                 }, 3000);
             }
         });
+        /*]]>*/
         </script>
     </th:block>
 </body>

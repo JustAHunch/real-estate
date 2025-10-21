@@ -3,13 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/admin/layout}">
 
-<head>
-    <title>매물 목록 - 범부동산</title>
-
+<th:block layout:fragment="styles">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css">
+    <!-- Ekko Lightbox -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.css">
 
     <style>
         .property-image {
@@ -56,30 +56,28 @@
             margin-left: auto;
         }
     </style>
-</head>
+</th:block>
 
-<body>
-    <!-- Content Header -->
-    <section layout:fragment="content-header" class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1><i class="fas fa-building mr-2"></i>매물 목록</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
-                        <li class="breadcrumb-item">매물관리</li>
-                        <li class="breadcrumb-item active">매물 목록</li>
-                    </ol>
-                </div>
+<!-- Content Header -->
+<div layout:fragment="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><i class="fas fa-building mr-2"></i>매물 목록</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
+                    <li class="breadcrumb-item">매물관리</li>
+                    <li class="breadcrumb-item active">매물 목록</li>
+                </ol>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <!-- Main Content -->
-    <section layout:fragment="content" class="content">
-        <div class="container-fluid">
+<!-- Main Content -->
+<div layout:fragment="content">
             <!-- 필터 섹션 -->
             <div class="card">
                 <div class="card-header">
@@ -290,132 +288,133 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+</div>
 
-    <!-- Scripts -->
-    <th:block layout:fragment="scripts">
-        <!-- DataTables -->
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<!-- Scripts -->
+<th:block layout:fragment="scripts">
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
 
-        <!-- Buttons extension -->
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- Buttons extension -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-        <!-- Ekko Lightbox -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+    <!-- Ekko Lightbox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
 
-        <script>
-        $(document).ready(function() {
-            // DataTables 초기화
-            const table = $('#propertiesTable').DataTable({
-                responsive: true,
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ko.json'
+    <script>
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        // DataTables 초기화
+        const table = $('#propertiesTable').DataTable({
+            responsive: true,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ko.json'
+            },
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], ["10", "25", "50", "100"]],
+            order: [[0, 'desc']],
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+            columnDefs: [
+                {
+                    targets: [1, 8], // 이미지, 관리 컬럼
+                    orderable: false,
+                    searchable: false
                 },
-                pageLength: 10,
-                lengthMenu: [[10, 25, 50, 100], ["10", "25", "50", "100"]],
-                order: [[0, 'desc']],
-                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
-                columnDefs: [
-                    {
-                        targets: [1, 8], // 이미지, 관리 컬럼
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        targets: [6], // 상태 컬럼
-                        render: function(data, type, row) {
-                            if (type === 'display') {
-                                return data;
-                            }
+                {
+                    targets: [6], // 상태 컬럼
+                    render: function(data, type, row) {
+                        if (type === 'display') {
                             return data;
                         }
+                        return data;
                     }
-                ],
-                initComplete: function() {
-                    // 초기화 완료 후 커스텀 필터 이벤트 바인딩
-                    bindFilterEvents();
+                }
+            ],
+            initComplete: function() {
+                // 초기화 완료 후 커스텀 필터 이벤트 바인딩
+                bindFilterEvents();
+            }
+        });
+
+        // 커스텀 필터 이벤트 바인딩
+        function bindFilterEvents() {
+            // 검색 버튼 클릭
+            $('#btnSearch').on('click', function() {
+                const keyword = $('#searchKeyword').val();
+                table.search(keyword).draw();
+            });
+
+            // 엔터키 검색
+            $('#searchKeyword').on('keypress', function(e) {
+                if (e.which === 13) {
+                    const keyword = $(this).val();
+                    table.search(keyword).draw();
                 }
             });
 
-            // 커스텀 필터 이벤트 바인딩
-            function bindFilterEvents() {
-                // 검색 버튼 클릭
-                $('#btnSearch').on('click', function() {
-                    const keyword = $('#searchKeyword').val();
-                    table.search(keyword).draw();
-                });
-
-                // 엔터키 검색
-                $('#searchKeyword').on('keypress', function(e) {
-                    if (e.which === 13) {
-                        const keyword = $(this).val();
-                        table.search(keyword).draw();
-                    }
-                });
-
-                // 필터 변경 시 검색
-                $('#filterType, #filterTransaction, #filterStatus').on('change', function() {
-                    applyFilters();
-                });
-            }
-
-            // 필터 적용
-            function applyFilters() {
-                const typeFilter = $('#filterType').val();
-                const transactionFilter = $('#filterTransaction').val();
-                const statusFilter = $('#filterStatus').val();
-
-                // 각 컬럼별 필터 적용
-                table.columns(3).search(typeFilter); // 종류 컬럼
-                table.columns(4).search(transactionFilter); // 거래유형 컬럼
-                table.columns(6).search(statusFilter); // 상태 컬럼
-
-                table.draw();
-            }
-
-            // 내보내기 버튼 이벤트
-            $('#btnExcelExport').on('click', function() {
-                table.button('.buttons-excel').trigger();
+            // 필터 변경 시 검색
+            $('#filterType, #filterTransaction, #filterStatus').on('change', function() {
+                applyFilters();
             });
+        }
 
-            $('#btnPdfExport').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
+        // 필터 적용
+        function applyFilters() {
+            const typeFilter = $('#filterType').val();
+            const transactionFilter = $('#filterTransaction').val();
+            const statusFilter = $('#filterStatus').val();
 
-            $('#btnPrint').on('click', function() {
-                table.button('.buttons-print').trigger();
-            });
+            // 각 컬럼별 필터 적용
+            table.columns(3).search(typeFilter); // 종류 컬럼
+            table.columns(4).search(transactionFilter); // 거래유형 컬럼
+            table.columns(6).search(statusFilter); // 상태 컬럼
 
-            // Lightbox 초기화
-            $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-                event.preventDefault();
-                $(this).ekkoLightbox();
-            });
+            table.draw();
+        }
 
-            // 툴팁 초기화
-            $('[title]').tooltip();
+        // 내보내기 버튼 이벤트
+        $('#btnExcelExport').on('click', function() {
+            table.button('.buttons-excel').trigger();
         });
 
-        // 매물 관련 함수들
-        function viewProperty(id) {
-            window.open('/admin/properties/' + id, '_blank');
-        }
+        $('#btnPdfExport').on('click', function() {
+            table.button('.buttons-pdf').trigger();
+        });
 
-        function editProperty(id) {
-            window.location.href = '/admin/properties/edit/' + id;
-        }
+        $('#btnPrint').on('click', function() {
+            table.button('.buttons-print').trigger();
+        });
 
-        function deleteProperty(id) {
+        // Lightbox 초기화
+        $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+
+        // 툴팁 초기화
+        $('[title]').tooltip();
+    });
+
+    // 매물 관련 함수들
+    function viewProperty(id) {
+        window.open('/admin/properties/' + id, '_blank');
+    }
+
+    function editProperty(id) {
+        window.location.href = '/admin/properties/edit/' + id;
+    }
+
+    function deleteProperty(id) {
+        if (typeof Swal !== 'undefined') {
             Swal.fire({
                 title: '매물 삭제',
                 text: '정말 이 매물을 삭제하시겠습니까?',
@@ -441,8 +440,24 @@
                     });
                 }
             });
+        } else {
+            if (confirm('정말 이 매물을 삭제하시겠습니까?')) {
+                // AJAX 삭제 요청
+                $.ajax({
+                    url: '/api/v1/admin/properties/' + id,
+                    method: 'DELETE',
+                    success: function(response) {
+                        alert('매물이 성공적으로 삭제되었습니다.');
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert('매물 삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            }
         }
-        </script>
-    </th:block>
-</body>
+    }
+    /*]]>*/
+    </script>
+</th:block>
 </html>
