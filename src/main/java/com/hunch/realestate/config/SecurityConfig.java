@@ -84,7 +84,7 @@ public class SecurityConfig {
                                 "/error"
                         ).permitAll()
                         // 관리자 전용 페이지
-                        .requestMatchers("/pages/admin/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "USER")
                         // 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated()
@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/pages/admin/dashboard", true)
+                        .defaultSuccessUrl("/admin/properties/list", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )

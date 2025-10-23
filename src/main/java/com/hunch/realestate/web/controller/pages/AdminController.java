@@ -16,9 +16,17 @@ public class AdminController {
     private final PropertyService propertyService;
 
     /**
-     * 대시보드
+     * 루트 URL 접근 시 매물 목록으로 리다이렉트
      */
-    @GetMapping({"/", "/index", "/pages/admin/dashboard"})
+    @GetMapping({"/", "/index"})
+    public String redirectToProperties() {
+        return "redirect:/admin/properties/list";
+    }
+
+    /**
+     * 대시보드 (페이지는 유지하지만 메뉴에서 제거됨)
+     */
+    @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
         // 메뉴 활성화
         model.addAttribute("currentMenu", "dashboard");
@@ -35,7 +43,7 @@ public class AdminController {
             // 매물 통계
             long totalProperties = propertyService.getTotalCount();
             model.addAttribute("totalProperties", totalProperties);
-            
+
             // 추가 통계 데이터는 필요시 구현
             model.addAttribute("newPropertiesThisMonth", 0);
             model.addAttribute("soldPropertiesThisMonth", 0);

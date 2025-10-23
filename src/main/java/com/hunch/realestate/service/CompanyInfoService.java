@@ -1,9 +1,12 @@
 package com.hunch.realestate.service;
 
 import com.hunch.realestate.domain.dto.CompanyInfoDTO;
+import com.hunch.realestate.domain.entity.CompanyInfo;
+import com.hunch.realestate.repository.CompanyInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 부동산 정보 관리 서비스
@@ -11,40 +14,82 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompanyInfoService {
+
+    private final CompanyInfoRepository companyInfoRepository;
 
     /**
      * 부동산 정보 조회
      */
     public CompanyInfoDTO getCompanyInfo() {
         try {
-            // JSON 파일에서 데이터 읽어오기 (파일이 있다면)
-            // 현재는 기본값 반환
+            CompanyInfo companyInfo = companyInfoRepository.findFirstByOrderByCreatedAtDesc()
+                    .orElseGet(null);
+
             return CompanyInfoDTO.builder()
-                    .businessName("범부동산중개사무소")
-                    .address1("경남 창원시 성산구 대원동 36-5")
-                    .address2("경남 창원시 성산구 대원로 87 센트럴스페어 104호 농협은행앞")
-                    .directions("대원초등학교 도보 1분 센트럴스페어 104호 농협은행앞")
-                    .phoneNumber("055-237-1239")
-                    .managerPosition("대표(CEO)")
-                    .managerName("홍길동")
-                    .managerPhone("010-6565-9400")
-                    .managerPhoto("")
+                    .businessName(companyInfo.getBusinessName())
+                    .address1(companyInfo.getAddress1())
+                    .address2(companyInfo.getAddress2())
+                    .directions(companyInfo.getDirections())
+                    .phoneNumber(companyInfo.getPhoneNumber())
+                    .faxNumber(companyInfo.getFaxNumber())
+                    .managerPosition(companyInfo.getManagerPosition())
+                    .managerName(companyInfo.getManagerName())
+                    .managerPhone(companyInfo.getManagerPhone())
+                    .managerEmail(companyInfo.getManagerEmail())
+                    .managerPhoto(companyInfo.getManagerPhoto())
                     .build();
         } catch (Exception e) {
             log.error("부동산 정보 조회 중 오류 발생: ", e);
-            return new CompanyInfoDTO();
+            return null;
         }
+    }
+
+    /**
+     * Entity를 DTO로 변환
+     */
+    private CompanyInfoDTO convertToDTO(CompanyInfo entity) {
+        return CompanyInfoDTO.builder()
+                .businessName(entity.getBusinessName())
+                .address1(entity.getAddress1())
+                .address2(entity.getAddress2())
+                .directions(entity.getDirections())
+                .phoneNumber(entity.getPhoneNumber())
+                .faxNumber(entity.getFaxNumber())
+                .managerPosition(entity.getManagerPosition())
+                .managerName(entity.getManagerName())
+                .managerPhone(entity.getManagerPhone())
+                .managerEmail(entity.getManagerEmail())
+                .managerPhoto(entity.getManagerPhoto())
+                .build();
     }
 
     /**
      * 부동산 정보 저장
      */
-    public void saveCompanyInfo(CompanyInfoDTO companyInfo) {
+    @Transactional
+    public void saveCompanyInfo(CompanyInfoDTO dto) {
         try {
-            // JSON 파일로 저장 (향후 구현)
-            log.info("부동산 정보 저장: {}", companyInfo.getBusinessName());
-            // jsonStorageService.save("company-info", companyInfo);
+            // 기존 데이터가 있으면 삭제 (단일 레코드 관리)
+            companyInfoRepository.deleteAll();
+
+            CompanyInfo entity = CompanyInfo.builder()
+                    .businessName(dto.getBusinessName())
+                    .address1(dto.getAddress1())
+                    .address2(dto.getAddress2())
+                    .directions(dto.getDirections())
+                    .phoneNumber(dto.getPhoneNumber())
+                    .faxNumber(dto.getFaxNumber())
+                    .managerPosition(dto.getManagerPosition())
+                    .managerName(dto.getManagerName())
+                    .managerPhone(dto.getManagerPhone())
+                    .managerEmail(dto.getManagerEmail())
+                    .managerPhoto(dto.getManagerPhoto())
+                    .build();
+
+            companyInfoRepository.save(entity);
+            log.info("부동산 정보 저장 완료: {}", dto.getBusinessName());
         } catch (Exception e) {
             log.error("부동산 정보 저장 중 오류 발생: ", e);
             throw new RuntimeException("부동산 정보 저장에 실패했습니다.", e);
@@ -54,6 +99,7 @@ public class CompanyInfoService {
     /**
      * 부동산 정보 수정
      */
+    @Transactional
     public void updateCompanyInfo(CompanyInfoDTO companyInfo) {
         try {
             log.info("부동산 정보 수정: {}", companyInfo.getBusinessName());

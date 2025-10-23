@@ -135,8 +135,9 @@
         }, false);
         
         // ==================== CSRF 토큰 설정 ====================
-        var csrfToken = /*[[${_csrf.token}]]*/ '';
-        var csrfHeader = /*[[${_csrf.headerName}]]*/ '';
+        // CSRF가 활성화된 경우에만 토큰을 설정합니다
+        var csrfToken = /*[[${_csrf?.token}]]*/ '';
+        var csrfHeader = /*[[${_csrf?.headerName}]]*/ '';
         if (csrfToken && csrfHeader) {
             $(document).ajaxSend(function(e, xhr, options) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -317,8 +318,5 @@
         <span class="sr-only">Loading...</span>
     </div>
 </div>
-
-<!-- 추가 스크립트 -->
-<th:block th:replace="${additionalScripts}" />
 </body>
 </html>

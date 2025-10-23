@@ -1,204 +1,60 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="sidebar">
 <body>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a th:href="@{/admin/dashboard}" class="brand-link">
-        <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" 
-             alt="범부동산 Logo" 
-             class="brand-image img-circle elevation-3" 
-             style="opacity: .8">
-        <span class="brand-text font-weight-light">범부동산</span>
+    <a href="/admin/dashboard" class="brand-link">
+        <span class="brand-text font-weight-light">범부동산 관리자</span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex" sec:authorize="isAuthenticated()">
+        <!-- Sidebar user panel -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg" 
-                     class="img-circle elevation-2" 
-                     alt="User Image">
+                <img src="/images/beom_logo.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block" sec:authentication="name">사용자</a>
+                <a href="#" class="d-block" sec:authentication="name">관리자명</a>
             </div>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Dashboard -->
+                <!-- 구분선 -->
+                <li class="nav-header">시스템 관리</li>
+
+                <!-- 부동산정보 관리 -->
                 <li class="nav-item">
-                    <a th:href="@{/admin/dashboard}" 
-                       class="nav-link"
-                       th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/dashboard')} ? 'active' : ''">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>대시보드</p>
-                    </a>
-                </li>
-
-                <!-- 매물 관리 -->
-                <li class="nav-item"
-                    th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/properties')} ? 'menu-open' : ''">
-                    <a href="#" class="nav-link"
-                       th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/properties')} ? 'active' : ''">
-                        <i class="nav-icon fas fa-building"></i>
-                        <p>
-                            매물 관리
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a th:href="@{/admin/properties/list}" 
-                               class="nav-link"
-                               th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/properties/list')} ? 'active' : ''">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>매물 목록</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/properties/register}" 
-                               class="nav-link"
-                               th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/properties/register')} ? 'active' : ''">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>매물 등록</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/properties/upload}" 
-                               class="nav-link"
-                               th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/properties/upload')} ? 'active' : ''">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>엑셀 업로드</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- 거래 관리 -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-handshake"></i>
-                        <p>
-                            거래 관리
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a th:href="@{/admin/transactions/list}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>거래 내역</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/transactions/register}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>거래 등록</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- 고객 관리 -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>
-                            고객 관리
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a th:href="@{/admin/customers/list}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>고객 목록</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/customers/register}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>고객 등록</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- 회사 정보 -->
-                <li class="nav-item"
-                    th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/company')} ? 'menu-open' : ''">
-                    <a th:href="@{/admin/company/info}" 
-                       class="nav-link"
-                       th:classappend="${#strings.contains(#httpServletRequest.requestURI, '/admin/company')} ? 'active' : ''">
+                    <a href="/admin/company/info" class="nav-link"
+                       th:classappend="${currentMenu == 'company-info'} ? 'active' : ''">
                         <i class="nav-icon fas fa-info-circle"></i>
-                        <p>회사 정보</p>
+                        <p>부동산정보 관리</p>
                     </a>
-                </li>
-
-                <!-- 통계 및 리포트 -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>
-                            통계 및 리포트
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a th:href="@{/admin/reports/sales}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>매출 통계</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/reports/properties}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>매물 현황</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <!-- 구분선 -->
-                <li class="nav-header">시스템 설정</li>
+                <li class="nav-header">매물 관리</li>
 
-                <!-- 사용자 관리 -->
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user-cog"></i>
-                        <p>
-                            사용자 관리
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
+                <!-- 매물 목록 -->
+                <li class="nav-item">
+                    <a href="/admin/properties/list" class="nav-link"
+                       th:classappend="${currentMenu == 'properties-list'} ? 'active' : ''">
+                        <i class="nav-icon fas fa-list"></i>
+                        <p>매물 목록</p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a th:href="@{/admin/users/list}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>사용자 목록</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a th:href="@{/admin/users/register}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>사용자 등록</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
-                <!-- 시스템 설정 -->
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/admin/settings}" class="nav-link">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>시스템 설정</p>
+                <!-- 매물 등록 -->
+                <li class="nav-item">
+                    <a href="/admin/properties/register" class="nav-link"
+                       th:classappend="${currentMenu == 'properties-register'} ? 'active' : ''">
+                        <i class="nav-icon fas fa-plus-circle"></i>
+                        <p>매물 등록</p>
                     </a>
                 </li>
             </ul>

@@ -3,28 +3,26 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/admin/layout}" lang="ko">
 
-<div layout:fragment="content">
-    <!-- Content Header -->
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">부동산정보 관리</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
-                        <li class="breadcrumb-item">시스템 관리</li>
-                        <li class="breadcrumb-item active">부동산정보 관리</li>
-                    </ol>
-                </div>
+<!-- Content Header -->
+<div layout:fragment="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><i class="fas fa-info-circle mr-2"></i>부동산정보 관리</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> 홈</a></li>
+                    <li class="breadcrumb-item">시스템 관리</li>
+                    <li class="breadcrumb-item active">부동산정보 관리</li>
+                </ol>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
+<!-- Main Content -->
+<div layout:fragment="content">
             <div class="row">
                 <div class="col-12">
                     <div class="card card-warning card-outline">
@@ -50,8 +48,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-store"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="businessName" name="businessName"
-                                                       value="범부동산중개사무소" required>
+                                                <input type="text" class="form-control" id="businessName" name="businessName" required>
                                             </div>
                                         </div>
                                     </div>
@@ -62,8 +59,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                                 </div>
-                                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
-                                                       value="055-237-1239" placeholder="055-000-0000" required>
+                                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="055-000-0000" required>
                                             </div>
                                         </div>
                                     </div>
@@ -78,8 +74,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="address1" name="address1"
-                                                       value="경남 창원시 성산구 대원동 36-5" required>
+                                                <input type="text" class="form-control" id="address1" name="address1" required>
                                             </div>
                                         </div>
                                     </div>
@@ -90,8 +85,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="address2" name="address2"
-                                                       value="경남 창원시 성산구 대원로 87 센트럴스페어 104호 농협은행앞">
+                                                <input type="text" class="form-control" id="address2" name="address2">
                                             </div>
                                         </div>
                                     </div>
@@ -105,8 +99,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-route"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="directions" name="directions"
-                                                       value="대원초등학교 도보 1분 센트럴스페어 104호 농협은행앞">
+                                                <input type="text" class="form-control" id="directions" name="directions">
                                             </div>
                                         </div>
                                     </div>
@@ -140,8 +133,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="managerName" name="managerName"
-                                                       value="홍길동" required>
+                                                <input type="text" class="form-control" id="managerName" name="managerName" required>
                                             </div>
                                         </div>
                                     </div>
@@ -152,8 +144,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="managerPosition" name="managerPosition"
-                                                       value="대표(CEO)">
+                                                <input type="text" class="form-control" id="managerPosition" name="managerPosition">
                                             </div>
                                         </div>
                                     </div>
@@ -164,8 +155,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
                                                 </div>
-                                                <input type="tel" class="form-control" id="managerPhone" name="managerPhone"
-                                                       value="010-6565-9400" placeholder="010-0000-0000" required>
+                                                <input type="tel" class="form-control" id="managerPhone" name="managerPhone" placeholder="010-0000-0000" required>
                                             </div>
                                         </div>
                                     </div>
@@ -223,13 +213,15 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 </div>
 
 <th:block layout:fragment="scripts">
 <script>
+/*<![CDATA[*/
 $(document).ready(function() {
+    // 페이지 로드 시 데이터 불러오기
+    loadCompanyInfo();
+
     // Custom file input
     $('.custom-file-input').on('change', function() {
         const fileName = $(this).val().split('\\').pop();
@@ -246,7 +238,7 @@ $(document).ready(function() {
         }
     });
 
-    // 폼 제출 처리
+    // 폼 제출 처리 (AJAX API 호출)
     $('#companyInfoForm').on('submit', function(e) {
         e.preventDefault();
 
@@ -255,28 +247,79 @@ $(document).ready(function() {
             return;
         }
 
-        // 저장 처리 (실제로는 AJAX로 서버에 전송)
-        const formData = new FormData(this);
+        // 폼 데이터를 JSON 객체로 변환
+        const companyData = {
+            businessName: $('#businessName').val(),
+            address1: $('#address1').val(),
+            address2: $('#address2').val(),
+            directions: $('#directions').val(),
+            phoneNumber: $('#phoneNumber').val(),
+            faxNumber: $('#faxNumber').val(),
+            managerPosition: $('#managerPosition').val(),
+            managerName: $('#managerName').val(),
+            managerPhone: $('#managerPhone').val(),
+            managerEmail: $('#managerEmail').val(),
+            managerPhoto: $('#managerPhoto').val() || '/images/beom_logo.png'
+        };
 
         // 로딩 상태 표시
         const submitBtn = $(this).find('button[type="submit"]');
         const originalText = submitBtn.html();
         submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> 저장 중...');
 
-        // 시뮬레이션 (실제로는 서버 통신)
-        setTimeout(() => {
-            submitBtn.prop('disabled', false).html(originalText);
+        // AJAX로 API 호출
+        $.ajax({
+            url: '/api/v1/admin/company/info',
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(companyData),
+            success: function(response) {
+                submitBtn.prop('disabled', false).html(originalText);
 
-            // 성공 알림
-            $(document).Toasts('create', {
-                class: 'bg-success',
-                title: '저장 완료',
-                subtitle: '부동산 정보',
-                body: '부동산 정보가 성공적으로 저장되었습니다.',
-                autohide: true,
-                delay: 3000
-            });
-        }, 1500);
+                // 성공 알림
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '저장 완료',
+                        text: '부동산 정보가 성공적으로 저장되었습니다.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    $(document).Toasts('create', {
+                        class: 'bg-success',
+                        title: '저장 완료',
+                        subtitle: '부동산 정보',
+                        body: '부동산 정보가 성공적으로 저장되었습니다.',
+                        autohide: true,
+                        delay: 3000
+                    });
+                }
+
+                // 데이터 다시 로드
+                setTimeout(() => loadCompanyInfo(), 1000);
+            },
+            error: function(xhr, status, error) {
+                submitBtn.prop('disabled', false).html(originalText);
+
+                // 오류 알림
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '저장 실패',
+                        text: '부동산 정보 저장 중 오류가 발생했습니다.',
+                    });
+                } else {
+                    $(document).Toasts('create', {
+                        class: 'bg-danger',
+                        title: '저장 실패',
+                        body: '부동산 정보 저장 중 오류가 발생했습니다.',
+                        autohide: true,
+                        delay: 3000
+                    });
+                }
+            }
+        });
     });
 
     // 업로드 버튼 클릭
@@ -284,6 +327,37 @@ $(document).ready(function() {
         $('#managerPhoto').click();
     });
 });
+
+// 회사 정보 로드 함수
+function loadCompanyInfo() {
+    $.ajax({
+        url: '/api/v1/admin/company/info',
+        method: 'GET',
+        success: function(data) {
+            // 폼 필드에 데이터 채우기
+            $('#businessName').val(data.businessName || '');
+            $('#address1').val(data.address1 || '');
+            $('#address2').val(data.address2 || '');
+            $('#directions').val(data.directions || '');
+            $('#phoneNumber').val(data.phoneNumber || '');
+            $('#faxNumber').val(data.faxNumber || '');
+            $('#managerPosition').val(data.managerPosition || '');
+            $('#managerName').val(data.managerName || '');
+            $('#managerPhone').val(data.managerPhone || '');
+            $('#managerEmail').val(data.managerEmail || '');
+
+            // 담당자 사진 미리보기
+            if (data.managerPhoto) {
+                $('#previewImage').attr('src', data.managerPhoto);
+                $('#photoPreview').show();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('회사 정보 로드 실패:', error);
+            // 에러 발생 시 기본값 유지 (서버의 getDefaultCompanyInfo가 반환됨)
+        }
+    });
+}
 
 function validateForm() {
     const requiredFields = ['businessName', 'phoneNumber', 'address1', 'managerName', 'managerPhone'];
@@ -320,6 +394,7 @@ function resetForm() {
         $('.form-control').removeClass('is-invalid');
     }
 }
+/*]]>*/
 </script>
 </th:block>
 </html>

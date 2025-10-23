@@ -67,7 +67,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="/admin/dashboard">대시보드</a></li>
+                    <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> 홈</a></li>
                     <li class="breadcrumb-item">매물관리</li>
                     <li class="breadcrumb-item active">매물 목록</li>
                 </ol>
@@ -115,18 +115,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="filterStatus">상태</label>
-                                <select class="form-control" id="filterStatus">
-                                    <option value="">전체 상태</option>
-                                    <option value="available">판매중</option>
-                                    <option value="reserved">예약중</option>
-                                    <option value="sold">거래완료</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="searchKeyword">키워드 검색</label>
                                 <div class="input-group">
@@ -177,112 +166,17 @@
                         <table id="propertiesTable" class="table table-bordered table-hover table-striped">
                             <thead class="thead-light">
                                 <tr>
-                                    <th width="60">ID</th>
-                                    <th width="100">이미지</th>
                                     <th>주소</th>
                                     <th width="100">종류</th>
                                     <th width="120">거래유형</th>
-                                    <th width="120">가격</th>
-                                    <th width="100">상태</th>
+                                    <th width="140">가격</th>
+                                    <th width="100">평수</th>
                                     <th width="120">등록일</th>
                                     <th width="120">관리</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- 샘플 데이터 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>
-                                        <img src="/api/placeholder/80/60" alt="매물 이미지" class="property-image"
-                                             data-toggle="lightbox" data-title="강남역 초역세권 오피스텔">
-                                    </td>
-                                    <td>
-                                        <div class="property-info">
-                                            <strong>강남역 초역세권 오피스텔</strong><br>
-                                            <small class="text-muted">서울시 강남구 강남대로 123</small>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge badge-info">상가/사무실</span></td>
-                                    <td><span class="badge badge-primary">매매</span></td>
-                                    <td class="font-weight-bold text-success">5억 원</td>
-                                    <td><span class="badge badge-status-available status-badge">판매중</span></td>
-                                    <td>2025-10-15</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-info btn-sm" onclick="viewProperty('1')" title="상세보기">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm" onclick="editProperty('1')" title="수정">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteProperty('1')" title="삭제">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>
-                                        <img src="/api/placeholder/80/60" alt="매물 이미지" class="property-image"
-                                             data-toggle="lightbox" data-title="홍대 상권 1층 상가">
-                                    </td>
-                                    <td>
-                                        <div class="property-info">
-                                            <strong>홍대 상권 1층 상가</strong><br>
-                                            <small class="text-muted">서울시 마포구 홍익로 456</small>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge badge-warning">점포</span></td>
-                                    <td><span class="badge badge-success">전세</span></td>
-                                    <td class="font-weight-bold text-info">3억 원</td>
-                                    <td><span class="badge badge-status-reserved status-badge">예약중</span></td>
-                                    <td>2025-10-14</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-info btn-sm" onclick="viewProperty('2')" title="상세보기">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm" onclick="editProperty('2')" title="수정">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteProperty('2')" title="삭제">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>
-                                        <img src="/api/placeholder/80/60" alt="매물 이미지" class="property-image"
-                                             data-toggle="lightbox" data-title="신축 프리미엄 아파트">
-                                    </td>
-                                    <td>
-                                        <div class="property-info">
-                                            <strong>신축 프리미엄 아파트</strong><br>
-                                            <small class="text-muted">서울시 송파구 잠실로 789</small>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge badge-primary">아파트</span></td>
-                                    <td><span class="badge badge-danger">월세</span></td>
-                                    <td class="font-weight-bold text-primary">300/50만원</td>
-                                    <td><span class="badge badge-status-sold status-badge">거래완료</span></td>
-                                    <td>2025-10-10</td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-info btn-sm" onclick="viewProperty('3')" title="상세보기">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-warning btn-sm" onclick="editProperty('3')" title="수정">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteProperty('3')" title="삭제">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- AJAX로 로드됨 -->
                             </tbody>
                         </table>
                     </div>
@@ -292,13 +186,7 @@
 
 <!-- Scripts -->
 <th:block layout:fragment="scripts">
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
-
-    <!-- Buttons extension -->
+    <!-- DataTables Buttons extension (DataTables 기본은 fragments/scripts.html에 이미 로드됨) -->
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
@@ -313,29 +201,139 @@
     <script>
     /*<![CDATA[*/
     $(document).ready(function() {
-        // DataTables 초기화
+        // 커스텀 필터 변수
+        let currentFilters = {
+            type: '',
+            transactionType: '',
+            keyword: ''
+        };
+
+        // DataTables 초기화 (AJAX)
         const table = $('#propertiesTable').DataTable({
             responsive: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/api/v1/admin/properties',
+                type: 'GET',
+                data: function(d) {
+                    // DataTables 파라미터를 Spring Pageable 형식으로 변환
+                    return {
+                        page: Math.floor(d.start / d.length),
+                        size: d.length,
+                        type: currentFilters.type,
+                        transactionType: currentFilters.transactionType,
+                        keyword: currentFilters.keyword
+                    };
+                },
+                dataSrc: function(json) {
+                    // Spring PagingResult를 DataTables 형식으로 변환
+                    json.recordsTotal = json.totalElements || 0;
+                    json.recordsFiltered = json.totalElements || 0;
+                    return json.content || [];
+                }
+            },
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/ko.json'
             },
             pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100], ["10", "25", "50", "100"]],
-            order: [[0, 'desc']],
+            lengthMenu: [/*[+*/ [10, 25, 50, 100], ["10", "25", "50", "100"] /*+]*/],
+            order: [/*[+*/ [5, 'desc'] /*+]*/], // 등록일 기준 내림차순
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
-            columnDefs: [
+            columns: [
                 {
-                    targets: [1, 8], // 이미지, 관리 컬럼
-                    orderable: false,
-                    searchable: false
+                    data: 'address',
+                    render: function(data, type, row) {
+                        return '<div class="property-info">' +
+                               '<strong>' + (row.detailAddress || '') + '</strong><br>' +
+                               '<small class="text-muted">' + data + '</small>' +
+                               '</div>';
+                    }
                 },
                 {
-                    targets: [6], // 상태 컬럼
+                    data: 'propertyType',
+                    render: function(data) {
+                        const typeMap = {
+                            'APARTMENT': '아파트',
+                            'VILLA': '빌라',
+                            'ONE_ROOM': '원룸',
+                            'TWOTHREE_ROOM': '투룸/쓰리룸',
+                            'COMMERCIAL': '상가/사무실',
+                            'STORE': '점포'
+                        };
+                        const badgeColors = {
+                            'APARTMENT': 'primary',
+                            'VILLA': 'success',
+                            'ONE_ROOM': 'info',
+                            'TWOTHREE_ROOM': 'warning',
+                            'COMMERCIAL': 'info',
+                            'STORE': 'warning'
+                        };
+                        return '<span class="badge badge-' + (badgeColors[data] || 'secondary') + '">' +
+                               (typeMap[data] || data) + '</span>';
+                    }
+                },
+                {
+                    data: 'transactionType',
+                    render: function(data) {
+                        const typeMap = {
+                            'SALE': '매매',
+                            'JEONSE': '전세',
+                            'MONTHLY': '월세'
+                        };
+                        const badgeColors = {
+                            'SALE': 'primary',
+                            'JEONSE': 'success',
+                            'MONTHLY': 'danger'
+                        };
+                        return '<span class="badge badge-' + (badgeColors[data] || 'secondary') + '">' +
+                               (typeMap[data] || data) + '</span>';
+                    }
+                },
+                {
+                    data: null,
                     render: function(data, type, row) {
-                        if (type === 'display') {
-                            return data;
+                        if (row.transactionType === 'SALE') {
+                            return '<span class="font-weight-bold text-success">' +
+                                   formatPrice(row.price) + '</span>';
+                        } else if (row.transactionType === 'JEONSE') {
+                            return '<span class="font-weight-bold text-info">' +
+                                   formatPrice(row.deposit) + '</span>';
+                        } else if (row.transactionType === 'MONTHLY') {
+                            return '<span class="font-weight-bold text-primary">' +
+                                   formatPrice(row.deposit) + '/' + formatPrice(row.monthlyRent) + '</span>';
                         }
-                        return data;
+                        return '-';
+                    }
+                },
+                {
+                    data: 'areaPyeong',
+                    render: function(data) {
+                        return data ? data + '평' : '-';
+                    }
+                },
+                {
+                    data: 'createdAt',
+                    render: function(data) {
+                        return data ? new Date(data).toLocaleDateString('ko-KR') : '-';
+                    }
+                },
+                {
+                    data: 'id',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data) {
+                        return '<div class="btn-group" role="group">' +
+                               '<button class="btn btn-info btn-sm" onclick="viewProperty(\'' + data + '\')" title="상세보기">' +
+                               '<i class="fas fa-eye"></i>' +
+                               '</button>' +
+                               '<button class="btn btn-warning btn-sm" onclick="editProperty(\'' + data + '\')" title="수정">' +
+                               '<i class="fas fa-edit"></i>' +
+                               '</button>' +
+                               '<button class="btn btn-danger btn-sm" onclick="deleteProperty(\'' + data + '\')" title="삭제">' +
+                               '<i class="fas fa-trash"></i>' +
+                               '</button>' +
+                               '</div>';
                     }
                 }
             ],
@@ -345,40 +343,43 @@
             }
         });
 
+        // 가격 포맷 함수
+        function formatPrice(price) {
+            if (!price || price === 0) return '0원';
+
+            const eok = Math.floor(price / 100000000);
+            const man = Math.floor((price % 100000000) / 10000);
+
+            let result = '';
+            if (eok > 0) result += eok + '억';
+            if (man > 0) result += ' ' + man + '만원';
+            if (result === '') result = price.toLocaleString() + '원';
+
+            return result.trim();
+        }
+
         // 커스텀 필터 이벤트 바인딩
         function bindFilterEvents() {
             // 검색 버튼 클릭
             $('#btnSearch').on('click', function() {
-                const keyword = $('#searchKeyword').val();
-                table.search(keyword).draw();
+                currentFilters.keyword = $('#searchKeyword').val();
+                table.ajax.reload();
             });
 
             // 엔터키 검색
             $('#searchKeyword').on('keypress', function(e) {
                 if (e.which === 13) {
-                    const keyword = $(this).val();
-                    table.search(keyword).draw();
+                    currentFilters.keyword = $(this).val();
+                    table.ajax.reload();
                 }
             });
 
             // 필터 변경 시 검색
-            $('#filterType, #filterTransaction, #filterStatus').on('change', function() {
-                applyFilters();
+            $('#filterType, #filterTransaction').on('change', function() {
+                currentFilters.type = $('#filterType').val();
+                currentFilters.transactionType = $('#filterTransaction').val();
+                table.ajax.reload();
             });
-        }
-
-        // 필터 적용
-        function applyFilters() {
-            const typeFilter = $('#filterType').val();
-            const transactionFilter = $('#filterTransaction').val();
-            const statusFilter = $('#filterStatus').val();
-
-            // 각 컬럼별 필터 적용
-            table.columns(3).search(typeFilter); // 종류 컬럼
-            table.columns(4).search(transactionFilter); // 거래유형 컬럼
-            table.columns(6).search(statusFilter); // 상태 컬럼
-
-            table.draw();
         }
 
         // 내보내기 버튼 이벤트
