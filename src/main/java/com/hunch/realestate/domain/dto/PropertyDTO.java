@@ -28,6 +28,14 @@ public class PropertyDTO {
     private Long price;  // 매매가
     private Long deposit;  // 보증금 (전세/월세)
     private Long monthlyRent;  // 월세
+    private Double areaPyeong;  // 평수
+    private Integer floor;  // 층수
+    private String direction;  // 방향
+    private String heatingType;  // 난방 종류
+    private String moveInType;  // 입주 타입
+    private String bathroom;  // 화장실
+    private String buildingUsage;  // 건축물 용도
+    private String managerContact;  // 담당자 연락처
     private List<String> images = new ArrayList<>();
     private String description;
     private LocalDateTime createdAt;

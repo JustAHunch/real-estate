@@ -220,6 +220,16 @@ public class PropertyService {
         dto.setDeposit(property.getDeposit());
         dto.setMonthlyRent(property.getMonthlyRent());
 
+        // 추가 필드 매핑
+        dto.setAreaPyeong(property.getAreaPyeong());
+        dto.setFloor(property.getFloor());
+        dto.setDirection(property.getDirection());
+        dto.setHeatingType(property.getHeatingType());
+        dto.setMoveInType(property.getMoveInType());
+        dto.setBathroom(property.getBathroom());
+        dto.setBuildingUsage(property.getBuildingUsage());
+        dto.setManagerContact(property.getManagerContact());
+
         // 이미지 URL 문자열을 리스트로 변환
         if (property.getPhotoUrls() != null && !property.getPhotoUrls().isEmpty()) {
             dto.setImages(Arrays.asList(property.getPhotoUrls().split(",")));
@@ -246,6 +256,16 @@ public class PropertyService {
         property.setDeposit(dto.getDeposit());
         property.setMonthlyRent(dto.getMonthlyRent());
 
+        // 추가 필드 매핑
+        property.setAreaPyeong(dto.getAreaPyeong());
+        property.setFloor(dto.getFloor());
+        property.setDirection(dto.getDirection());
+        property.setHeatingType(dto.getHeatingType());
+        property.setMoveInType(dto.getMoveInType());
+        property.setBathroom(dto.getBathroom());
+        property.setBuildingUsage(dto.getBuildingUsage());
+        property.setManagerContact(dto.getManagerContact());
+
         // 이미지 리스트를 콤마로 구분된 문자열로 변환
         if (dto.getImages() != null && !dto.getImages().isEmpty()) {
             property.setPhotoUrls(String.join(",", dto.getImages()));
@@ -266,6 +286,17 @@ public class PropertyService {
         property.setPrice(dto.getPrice());
         property.setDeposit(dto.getDeposit());
         property.setMonthlyRent(dto.getMonthlyRent());
+
+        // 추가 필드 업데이트
+        property.setAreaPyeong(dto.getAreaPyeong());
+        property.setFloor(dto.getFloor());
+        property.setDirection(dto.getDirection());
+        property.setHeatingType(dto.getHeatingType());
+        property.setMoveInType(dto.getMoveInType());
+        property.setBathroom(dto.getBathroom());
+        property.setBuildingUsage(dto.getBuildingUsage());
+        property.setManagerContact(dto.getManagerContact());
+
         property.setDescription(dto.getDescription());
     }
 }
