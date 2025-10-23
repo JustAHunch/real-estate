@@ -14,6 +14,11 @@ public class PagingResult<T> {
     private final int totalCount;
     private final int totalPages;
 
+    // DataTables compatibility - alias for totalCount
+    public int getTotalElements() {
+        return totalCount;
+    }
+
     public boolean hasNext() {
         return currentPage < totalPages - 1;
     }

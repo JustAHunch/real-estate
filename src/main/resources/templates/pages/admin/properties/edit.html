@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
     <!-- Summernote -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.min.css">
 </th:block>
 
 <div layout:fragment="content">
@@ -43,7 +41,7 @@
             </div>
 
             <form id="propertyEditForm" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="propertyId" th:value="${property.id}" value="sample-property-id">
+                <input type="hidden" name="propertyId" th:value="${propertyId}" id="propertyId">
 
                 <div class="row">
                     <!-- 기본 정보 카드 -->
@@ -66,7 +64,7 @@
                                         <div class="form-group">
                                             <label for="propertyName">매물명 <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="propertyName" name="propertyName"
-                                                   th:value="${property.propertyName}" value="강남역 초역세권 오피스텔"
+                                                   
                                                    placeholder="매물명을 입력하세요" required>
                                         </div>
                                     </div>
@@ -75,12 +73,12 @@
                                             <label for="propertyType">매물 종류 <span class="text-danger">*</span></label>
                                             <select class="form-control select2" id="propertyType" name="propertyType" required>
                                                 <option value="">매물 종류 선택</option>
-                                                <option value="APARTMENT" th:selected="${property.propertyType == 'APARTMENT'}" selected>아파트</option>
-                                                <option value="VILLA" th:selected="${property.propertyType == 'VILLA'}">빌라</option>
-                                                <option value="ONE_ROOM" th:selected="${property.propertyType == 'ONE_ROOM'}">원룸</option>
-                                                <option value="TWOTHREE_ROOM" th:selected="${property.propertyType == 'TWOTHREE_ROOM'}">투룸/쓰리룸</option>
-                                                <option value="COMMERCIAL" th:selected="${property.propertyType == 'COMMERCIAL'}">상가/사무실</option>
-                                                <option value="STORE" th:selected="${property.propertyType == 'STORE'}">점포</option>
+                                                <option value="APARTMENT" >아파트</option>
+                                                <option value="VILLA" >빌라</option>
+                                                <option value="ONE_ROOM" >원룸</option>
+                                                <option value="TWOTHREE_ROOM" >투룸/쓰리룸</option>
+                                                <option value="COMMERCIAL" >상가/사무실</option>
+                                                <option value="STORE" >점포</option>
                                             </select>
                                         </div>
                                     </div>
@@ -88,16 +86,30 @@
 
                                 <div class="form-group">
                                     <label for="address">주소 <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="address" name="address"
-                                               th:value="${property.address}" value="서울시 강남구 강남대로 123"
-                                               placeholder="매물 주소를 입력하세요" required>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" id="postalCode" name="postalCode"
+                                                placeholder="우편번호" readonly>
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary" type="button" id="searchAddress">
                                                 <i class="fas fa-search"></i> 주소 검색
                                             </button>
                                         </div>
                                     </div>
+                                    <input type="text" class="form-control mb-2" id="roadAddress" name="roadAddress"
+                                            placeholder="도로명 주소" readonly>
+                                    <input type="text" class="form-control mb-2" id="jibunAddress" name="jibunAddress"
+                                            placeholder="지번 주소" readonly>
+                                    <input type="text" class="form-control" id="address" name="address"
+                                            placeholder="기본 주소 (자동입력)" readonly required>
+                                    <!-- Hidden fields for coordinates -->
+                                    <input type="hidden" id="latitude" name="latitude" >
+                                    <input type="hidden" id="longitude" name="longitude" >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="detailAddress">상세 주소</label>
+                                    <input type="text" class="form-control" id="detailAddress" name="detailAddress"
+                                            placeholder="상세 주소를 입력하세요 (예: 101호)">
                                 </div>
 
                                 <!-- 동적 필드 컨테이너 -->
@@ -120,9 +132,9 @@
                                             <label for="transactionType">거래 종류 <span class="text-danger">*</span></label>
                                             <select class="form-control select2" id="transactionType" name="transactionType" required>
                                                 <option value="">거래 종류 선택</option>
-                                                <option value="매매" th:selected="${property.transactionType == '매매'}" selected>매매</option>
-                                                <option value="전세" th:selected="${property.transactionType == '전세'}">전세</option>
-                                                <option value="월세" th:selected="${property.transactionType == '월세'}">월세</option>
+                                                <option value="매매" >매매</option>
+                                                <option value="전세" >전세</option>
+                                                <option value="월세" >월세</option>
                                             </select>
                                         </div>
                                     </div>
@@ -130,7 +142,7 @@
                                         <div class="form-group">
                                             <label for="price">가격 (만원) <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="price" name="price"
-                                                   th:value="${property.price}" value="50000"
+                                                   
                                                    placeholder="0" min="0" required>
                                         </div>
                                     </div>
@@ -138,7 +150,7 @@
                                         <div class="form-group">
                                             <label for="deposit">보증금 (만원)</label>
                                             <input type="number" class="form-control" id="deposit" name="deposit"
-                                                   th:value="${property.deposit}" value="0"
+                                                   
                                                    placeholder="0" min="0">
                                         </div>
                                     </div>
@@ -146,7 +158,7 @@
                                         <div class="form-group">
                                             <label for="monthlyRent">월세 (만원)</label>
                                             <input type="number" class="form-control" id="monthlyRent" name="monthlyRent"
-                                                   th:value="${property.monthlyRent}" value="0"
+                                                   
                                                    placeholder="0" min="0">
                                         </div>
                                     </div>
@@ -165,7 +177,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="description">매물 설명</label>
-                                    <textarea id="summernote" name="description" th:text="${property.description}">
+                                    <textarea id="summernote" name="description" >
                                         <p>강남역 도보 3분 거리의 프리미엄 오피스텔입니다.</p>
                                         <ul>
                                             <li>최고급 마감재 사용</li>
@@ -192,17 +204,17 @@
                                 <div class="form-group">
                                     <label for="status">상태</label>
                                     <select class="form-control select2" id="status" name="status">
-                                        <option value="AVAILABLE" th:selected="${property.status == 'AVAILABLE'}" selected>판매중</option>
-                                        <option value="RESERVED" th:selected="${property.status == 'RESERVED'}">예약중</option>
-                                        <option value="SOLD" th:selected="${property.status == 'SOLD'}">거래완료</option>
-                                        <option value="HIDDEN" th:selected="${property.status == 'HIDDEN'}">숨김</option>
+                                        <option value="AVAILABLE" >판매중</option>
+                                        <option value="RESERVED" >예약중</option>
+                                        <option value="SOLD" >거래완료</option>
+                                        <option value="HIDDEN" >숨김</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="featured">추천 매물</label>
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input" id="featured" name="featured"
-                                               th:checked="${property.featured}">
+                                               >
                                         <label class="custom-control-label" for="featured">메인 페이지에 노출</label>
                                     </div>
                                 </div>
@@ -220,12 +232,12 @@
                             <div class="card-body">
                                 <!-- 기존 이미지 목록 -->
                                 <div id="existingImages" class="mb-3">
-                                    <div class="image-item mb-2" th:each="image : ${property.images}">
+                                    <div class="image-item mb-2" >
                                         <div class="card">
-                                            <img th:src="${image.url}" src="/api/placeholder/200/150" class="card-img-top" alt="매물 이미지">
+                                            <img  src="/images/beom_logo.png" class="card-img-top" alt="매물 이미지">
                                             <div class="card-body p-2">
                                                 <button type="button" class="btn btn-danger btn-sm btn-block"
-                                                        onclick="removeImage(this)" th:data-filename="${image.filename}">
+                                                        onclick="removeImage(this)" >
                                                     <i class="fas fa-trash"></i> 삭제
                                                 </button>
                                             </div>
@@ -234,7 +246,7 @@
                                     <!-- 샘플 이미지 (실제 데이터가 없을 때) -->
                                     <div class="image-item mb-2">
                                         <div class="card">
-                                            <img src="/api/placeholder/200/150" class="card-img-top" alt="매물 이미지">
+                                            <img src="/images/beom_logo.png" class="card-img-top" alt="매물 이미지">
                                             <div class="card-body p-2">
                                                 <button type="button" class="btn btn-danger btn-sm btn-block" onclick="removeImage(this)">
                                                     <i class="fas fa-trash"></i> 삭제
@@ -286,13 +298,19 @@
     <!-- Summernote -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/lang/summernote-ko-KR.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.min.js"></script>
+    <!-- Daum Postcode API -->
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
     <script>
     /*<![CDATA[*/
     $(document).ready(function() {
         let hasUnsavedChanges = false;
+        const propertyId = $('#propertyId').val();
+
+        // 매물 데이터 로드
+        if (propertyId) {
+            loadPropertyData(propertyId);
+        }
 
         // Select2 초기화
         $('.select2').select2({
@@ -399,6 +417,32 @@
             });
         });
 
+        // 주소 검색 초기화
+        $('#searchAddress').on('click', function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 우편번호와 주소 정보를 입력
+                    $('#postalCode').val(data.zonecode);
+                    $('#roadAddress').val(data.roadAddress);
+                    $('#jibunAddress').val(data.jibunAddress);
+
+                    // 기본 주소 선택 (도로명 우선, 없으면 지번)
+                    const baseAddress = data.roadAddress || data.jibunAddress;
+                    $('#address').val(baseAddress);
+                    $('#address').removeClass('is-invalid');
+
+                    // 좌표 변환
+                    getCoordinates(baseAddress);
+
+                    // 상세주소 입력란으로 포커스 이동
+                    $('#detailAddress').focus();
+
+                    hasUnsavedChanges = true;
+                    $('#unsavedAlert').show();
+                }
+            }).open();
+        });
+
         // 페이지 벗어날 때 경고
         $(window).on('beforeunload', function() {
             if (hasUnsavedChanges) {
@@ -406,6 +450,231 @@
             }
         });
     });
+
+    // 매물 데이터 로드
+    function loadPropertyData(propertyId) {
+        // 로딩 표시
+        Swal.fire({
+            title: '매물 정보 불러오는 중...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        $.ajax({
+            url: `/api/v1/admin/properties/${propertyId}`,
+            method: 'GET',
+            success: function(property) {
+                Swal.close(); // 로딩 닫기
+
+                // 기본 정보
+                $('#propertyName').val(property.propertyName || '');
+                $('#propertyType').val(property.propertyType || '').trigger('change');
+
+                // 주소 정보
+                $('#postalCode').val(property.postalCode || '');
+                $('#roadAddress').val(property.roadAddress || '');
+                $('#jibunAddress').val(property.jibunAddress || '');
+                $('#address').val(property.address || '');
+                $('#detailAddress').val(property.detailAddress || '');
+                $('#latitude').val(property.latitude || '');
+                $('#longitude').val(property.longitude || '');
+
+                // 가격 정보
+                $('#transactionType').val(property.transactionType || '').trigger('change');
+                $('#price').val(property.price || 0);
+                $('#deposit').val(property.deposit || 0);
+                $('#monthlyRent').val(property.monthlyRent || 0);
+
+                // 추가 필드 로드 (areaPyeong, floor, direction, etc.)
+                if (property.areaPyeong) {
+                    $('[name="areaPyeong"]').val(property.areaPyeong);
+                }
+                if (property.floor) {
+                    $('[name="floor"]').val(property.floor);
+                }
+                if (property.direction) {
+                    $('[name="direction"]').val(property.direction);
+                }
+                if (property.heatingType) {
+                    $('[name="heatingType"]').val(property.heatingType);
+                }
+                if (property.bathroom) {
+                    $('[name="bathroom"]').val(property.bathroom);
+                }
+                if (property.buildingUsage) {
+                    $('[name="buildingUsage"]').val(property.buildingUsage);
+                }
+                if (property.moveInType) {
+                    $('[name="moveInType"]').val(property.moveInType);
+                }
+                if (property.maintenanceFee) {
+                    $('[name="maintenanceFee"]').val(property.maintenanceFee);
+                }
+
+                // 상세 설명
+                if (property.description) {
+                    $('#summernote').summernote('code', property.description);
+                }
+
+                // 상태 정보
+                $('#status').val(property.status || 'AVAILABLE').trigger('change');
+                if (property.featured) {
+                    $('#featured').prop('checked', true);
+                }
+
+                // 동적 필드가 있는 경우 처리
+                if (property.propertyType) {
+                    // 동적 필드 로드 후 값 설정
+                    loadDynamicFieldsForEdit(property.propertyType, property);
+                }
+
+                // 이미지 로드
+                if (property.images && property.images.length > 0) {
+                    loadExistingImages(property.images);
+                }
+
+                console.log('매물 데이터 로드 완료:', property);
+            },
+            error: function(xhr) {
+                Swal.close();
+                console.error('매물 데이터 로드 실패:', xhr);
+                Swal.fire({
+                    icon: 'error',
+                    title: '오류',
+                    text: '매물 정보를 불러오는데 실패했습니다.'
+                }).then(() => {
+                    window.location.href = '/admin/properties/list';
+                });
+            }
+        });
+    }
+
+    // edit 페이지용 동적 필드 로드 (데이터 포함)
+    function loadDynamicFieldsForEdit(propertyType, propertyData) {
+        $.ajax({
+            url: '/api/v1/admin/properties/property-type-fields',
+            method: 'GET',
+            data: { type: propertyType },
+            success: function(response) {
+                let fieldsHtml = '<div class="row">';
+
+                response.fields.forEach(function(field, index) {
+                    if (index % 2 === 0 && index > 0) {
+                        fieldsHtml += '</div><div class="row">';
+                    }
+
+                    const fieldValue = propertyData[field.fieldName] || '';
+
+                    fieldsHtml += `<div class="col-md-6">
+                        <div class="form-group">
+                            <label for="${field.fieldName}">${field.displayName}</label>`;
+
+                    if (field.fieldType === 'SELECT') {
+                        fieldsHtml += `<select class="form-control" id="${field.fieldName}" name="${field.fieldName}">
+                            <option value="">선택하세요</option>`;
+                        field.options.forEach(function(option) {
+                            const selected = fieldValue === option ? 'selected' : '';
+                            fieldsHtml += `<option value="${option}" ${selected}>${option}</option>`;
+                        });
+                        fieldsHtml += '</select>';
+                    } else {
+                        fieldsHtml += `<input type="${field.fieldType.toLowerCase()}"
+                            class="form-control" id="${field.fieldName}" name="${field.fieldName}"
+                            value="${fieldValue}">`;
+                    }
+
+                    fieldsHtml += '</div></div>';
+                });
+
+                fieldsHtml += '</div>';
+                $('#dynamicFields').html(fieldsHtml);
+            },
+            error: function(xhr) {
+                console.error('동적 필드 로드 실패:', xhr.responseText);
+            }
+        });
+    }
+
+    // 기존 이미지 로드
+    function loadExistingImages(images) {
+        const container = $('#existingImages');
+        container.empty();
+
+        images.forEach(function(imageUrl) {
+            const imageHtml = `
+                <div class="image-item mb-2">
+                    <div class="card">
+                        <img src="${imageUrl}" class="card-img-top" alt="매물 이미지" style="height: 150px; object-fit: cover;">
+                        <div class="card-body p-2">
+                            <button type="button" class="btn btn-danger btn-sm btn-block" onclick="removeExistingImage(this, '${imageUrl}')">
+                                <i class="fas fa-trash"></i> 삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            container.append(imageHtml);
+        });
+    }
+
+    // 기존 이미지 삭제
+    window.removeExistingImage = function(button, imageUrl) {
+        Swal.fire({
+            title: '이미지 삭제',
+            text: '이 이미지를 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(button).closest('.image-item').remove();
+                hasUnsavedChanges = true;
+                $('#unsavedAlert').show();
+            }
+        });
+    };
+
+    // 좌표 가져오기 (Kakao Maps Geocoder 사용)
+    function getCoordinates(address) {
+        $.ajax({
+            url: 'https://dapi.kakao.com/v2/local/search/address.json',
+            type: 'GET',
+            headers: {
+                'Authorization': 'f6bac5696b9306e5fb34acef74db15b1'
+            },
+            data: {
+                query: address
+            },
+            success: function(response) {
+                if (response.documents && response.documents.length > 0) {
+                    const result = response.documents[0];
+                    $('#latitude').val(result.y);
+                    $('#longitude').val(result.x);
+                    console.log('좌표 설정 완료:', result.y, result.x);
+                } else {
+                    // 좌표를 찾을 수 없는 경우 기본값 설정 (창원시청 좌표)
+                    $('#latitude').val('35.2276');
+                    $('#longitude').val('128.6811');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '알림',
+                            text: '정확한 좌표를 찾을 수 없어 기본 좌표로 설정됩니다.',
+                            timer: 2000
+                        });
+                    }
+                }
+            },
+            error: function() {
+                // API 호출 실패시 기본 좌표 사용
+                $('#latitude').val('35.2276');
+                $('#longitude').val('128.6811');
+                console.log('좌표 API 호출 실패, 기본 좌표 사용');
+            }
+        });
+    }
 
     // 동적 필드 로드
     function loadDynamicFields(propertyType) {
@@ -543,7 +812,7 @@
                 icon: 'success'
             }).then(() => {
                 hasUnsavedChanges = false;
-                window.location.href = '/admin/properties';
+                window.location.href = '/admin/properties/list';
             });
         }, 1500);
     }
@@ -567,7 +836,7 @@
                 icon: 'success'
             }).then(() => {
                 hasUnsavedChanges = false;
-                window.location.href = '/admin/properties';
+                window.location.href = '/admin/properties/list';
             });
         }, 1500);
     }

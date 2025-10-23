@@ -704,7 +704,7 @@
                     success: function(response) {
                         showNotification('매물이 성공적으로 등록되었습니다.', 'success');
                         setTimeout(() => {
-                            window.location.href = '/admin/properties';
+                            window.location.href = '/admin/properties/list';
                         }, 2000);
                     },
                     error: function(xhr) {
