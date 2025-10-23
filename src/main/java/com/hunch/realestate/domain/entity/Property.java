@@ -38,7 +38,25 @@ public class Property extends BaseEntity {
     // ========== 기본 정보 ==========
 
     /**
-     * 주소
+     * 우편번호
+     */
+    @Column(name = "postal_code", length = 10)
+    private String postalCode;
+
+    /**
+     * 도로명 주소
+     */
+    @Column(name = "road_address", length = 500)
+    private String roadAddress;
+
+    /**
+     * 지번 주소
+     */
+    @Column(name = "jibun_address", length = 500)
+    private String jibunAddress;
+
+    /**
+     * 주소 (기존 필드, 호환성 유지)
      */
     @Column(name = "address", nullable = false, length = 500)
     private String address;

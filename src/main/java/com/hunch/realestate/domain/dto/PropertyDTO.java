@@ -20,6 +20,9 @@ import java.util.Map;
 public class PropertyDTO {
     private String id;
     private PropertyType propertyType;
+    private String postalCode;  // 우편번호
+    private String roadAddress;  // 도로명 주소
+    private String jibunAddress;  // 지번 주소
     private String address;
     private String detailAddress;
     private Double latitude;
