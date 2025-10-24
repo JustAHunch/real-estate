@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS attached_files (
     file_nm VARCHAR(500) NOT NULL,
     file_size BIGINT,
     is_del BOOLEAN DEFAULT FALSE,
-    input_user_id VARCHAR(100),
+    reg_id VARCHAR(100),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -56,7 +56,7 @@ COMMENT ON COLUMN attached_files.file_path IS '파일 저장 경로';
 COMMENT ON COLUMN attached_files.file_nm IS '저장된 파일명 (UUID + 확장자)';
 COMMENT ON COLUMN attached_files.file_size IS '파일 크기 (bytes)';
 COMMENT ON COLUMN attached_files.is_del IS '삭제 여부 (true: 삭제됨, false: 사용중)';
-COMMENT ON COLUMN attached_files.input_user_id IS '등록 사용자 ID';
+COMMENT ON COLUMN attached_files.reg_id IS '등록 사용자 ID';
 COMMENT ON COLUMN attached_files.created_at IS '생성 일시';
 COMMENT ON COLUMN attached_files.updated_at IS '수정 일시';
 

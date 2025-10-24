@@ -70,9 +70,9 @@ public class AttachedFile extends BaseEntity {
     /**
      * 등록 사용자 ID
      */
-    @Column(name = "input_user_id", length = 100)
+    @Column(name = "reg_id", length = 100)
     @Comment("등록 사용자 ID")
-    private String inputUserId;
+    private String regId;
 
     /**
      * 소프트 삭제 (삭제 플래그 변경)

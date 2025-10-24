@@ -24,7 +24,7 @@ public class AttachedFileDTO {
     private Long fileSize;
     private Double fileSizeInMB;
     private Boolean isDel;
-    private String inputUserId;
+    private String regId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
@@ -48,7 +48,7 @@ public class AttachedFileDTO {
                 .fileSize(entity.getFileSize())
                 .fileSizeInMB(entity.getFileSizeInMB())
                 .isDel(entity.getIsDel())
-                .inputUserId(entity.getInputUserId())
+                .regId(entity.getRegId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
                 .build();
@@ -66,7 +66,7 @@ public class AttachedFileDTO {
                 .fileNm(this.fileNm)
                 .fileSize(this.fileSize)
                 .isDel(this.isDel != null ? this.isDel : false)
-                .inputUserId(this.inputUserId)
+                .regId(this.regId)
                 .build();
     }
 }

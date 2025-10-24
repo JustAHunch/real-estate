@@ -154,7 +154,7 @@ public class AttachedFileService {
                     .fileNm(storedFileName)
                     .fileSize(multipartFile.getSize())
                     .isDel(false)
-                    .inputUserId(userId)
+                    .regId(userId)
                     .build();
 
             fileRepository.save(attachedFile);
@@ -328,7 +328,7 @@ public class AttachedFileService {
                 .filePath(filePath)
                 .fileNm(storedFileName)
                 .fileSize(file.getSize())
-                .inputUserId(userId)
+                .regId(userId)
                 .build();
     }
 }
