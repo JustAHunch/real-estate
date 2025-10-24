@@ -25,13 +25,6 @@ public class AttachedFile extends BaseEntity {
     private String fileGrpId;
 
     /**
-     * 파일 고유 ID
-     */
-    @Column(name = "file_uid", length = 100, nullable = false, unique = true)
-    @Comment("파일 ID")
-    private String fileUid;
-
-    /**
      * 원본 파일명
      */
     @Column(name = "file_origin_nm", length = 500, nullable = false)
@@ -69,10 +62,10 @@ public class AttachedFile extends BaseEntity {
     /**
      * 삭제 여부
      */
-    @Column(name = "del_yn")
+    @Column(name = "is_del")
     @Comment("삭제 여부 (true: 삭제됨, false: 사용중)")
     @Builder.Default
-    private Boolean delYn = false;
+    private Boolean isDel = false;
 
     /**
      * 등록 사용자 ID
@@ -85,7 +78,7 @@ public class AttachedFile extends BaseEntity {
      * 소프트 삭제 (삭제 플래그 변경)
      */
     public void softDelete() {
-        this.delYn = true;
+        this.isDel = true;
     }
 
     /**

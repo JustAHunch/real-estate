@@ -17,14 +17,13 @@ import java.time.LocalDateTime;
 public class AttachedFileDTO {
     private String id;
     private String fileGrpId;
-    private String fileUid;
     private String fileOriginNm;
     private String fileType;
     private String filePath;
     private String fileNm;
     private Long fileSize;
     private Double fileSizeInMB;
-    private Boolean delYn;
+    private Boolean isDel;
     private String inputUserId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -40,16 +39,15 @@ public class AttachedFileDTO {
         if (entity == null) return null;
 
         return AttachedFileDTO.builder()
-                .id(entity.getId())
+                .id(entity.getId()) // BaseEntity의 id 사용
                 .fileGrpId(entity.getFileGrpId())
-                .fileUid(entity.getFileUid())
                 .fileOriginNm(entity.getFileOriginNm())
                 .fileType(entity.getFileType())
                 .filePath(entity.getFilePath())
                 .fileNm(entity.getFileNm())
                 .fileSize(entity.getFileSize())
                 .fileSizeInMB(entity.getFileSizeInMB())
-                .delYn(entity.getDelYn())
+                .isDel(entity.getIsDel())
                 .inputUserId(entity.getInputUserId())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
@@ -62,13 +60,12 @@ public class AttachedFileDTO {
     public AttachedFile toEntity() {
         return AttachedFile.builder()
                 .fileGrpId(this.fileGrpId)
-                .fileUid(this.fileUid)
                 .fileOriginNm(this.fileOriginNm)
                 .fileType(this.fileType)
                 .filePath(this.filePath)
                 .fileNm(this.fileNm)
                 .fileSize(this.fileSize)
-                .delYn(this.delYn != null ? this.delYn : false)
+                .isDel(this.isDel != null ? this.isDel : false)
                 .inputUserId(this.inputUserId)
                 .build();
     }

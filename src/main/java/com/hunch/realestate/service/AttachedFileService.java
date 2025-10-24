@@ -61,13 +61,6 @@ public class AttachedFileService {
     }
 
     /**
-     * 파일 UID 생성
-     */
-    private String generateFileUid() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
-
-    /**
      * 파일 목록 조회 (파일 그룹 ID로)
      */
     @Transactional(readOnly = true)
@@ -79,12 +72,17 @@ public class AttachedFileService {
     }
 
     /**
-     * 단일 파일 조회
+     * 단일 파일 조회 (파일 ID로)
      */
     @Transactional(readOnly = true)
-    public AttachedFileDTO getFile(String fileUid) {
-        AttachedFile file = fileRepository.findByFileUidAndDelYn(fileUid, false)
-                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + fileUid));
+    public AttachedFileDTO getFile(String id) {
+        AttachedFile file = fileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + id));
+
+        if (file.getIsDel()) {
+            throw new RuntimeException("삭제된 파일입니다: " + id);
+        }
+
         return AttachedFileDTO.fromEntity(file);
     }
 
@@ -140,24 +138,22 @@ public class AttachedFileService {
                 throw new IOException("업로드할 수 없는 파일 형식입니다: " + fileExtension);
             }
 
-            // 파일 UID 생성
-            String fileUid = generateFileUid();
-            String storedFileName = fileUid + fileExtension;
+            // 저장될 파일명 생성 (UUID + 확장자)
+            String storedFileName = UUID.randomUUID().toString().replace("-", "") + fileExtension;
 
             // 파일 저장
             File destFile = new File(filePath, storedFileName);
             multipartFile.transferTo(destFile);
 
-            // DB에 파일 정보 저장
+            // DB에 파일 정보 저장 (id는 BaseEntity에서 자동 생성)
             AttachedFile attachedFile = AttachedFile.builder()
                     .fileGrpId(fileGrpId)
-                    .fileUid(fileUid)
                     .fileOriginNm(originalFileName)
                     .fileType(fileExtension)
                     .filePath(filePath)
                     .fileNm(storedFileName)
                     .fileSize(multipartFile.getSize())
-                    .delYn(false)
+                    .isDel(false)
                     .inputUserId(userId)
                     .build();
 
@@ -172,9 +168,13 @@ public class AttachedFileService {
      * 파일 다운로드
      */
     @Transactional(readOnly = true)
-    public void downloadFile(String fileUid, HttpServletResponse response) throws IOException {
-        AttachedFile file = fileRepository.findByFileUidAndDelYn(fileUid, false)
-                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + fileUid));
+    public void downloadFile(String id, HttpServletResponse response) throws IOException {
+        AttachedFile file = fileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + id));
+
+        if (file.getIsDel()) {
+            throw new RuntimeException("삭제된 파일입니다: " + id);
+        }
 
         File downloadFile = new File(file.getFilePath(), file.getFileNm());
         if (!downloadFile.exists()) {
@@ -200,8 +200,8 @@ public class AttachedFileService {
      * 여러 파일 ZIP으로 다운로드
      */
     @Transactional(readOnly = true)
-    public void downloadFilesAsZip(List<String> fileUids, HttpServletResponse response) throws IOException {
-        List<AttachedFile> files = fileRepository.findByFileUidIn(fileUids);
+    public void downloadFilesAsZip(List<String> fileIds, HttpServletResponse response) throws IOException {
+        List<AttachedFile> files = fileRepository.findAllById(fileIds);
 
         if (files.isEmpty()) {
             throw new IOException("다운로드할 파일이 없습니다.");
@@ -234,12 +234,16 @@ public class AttachedFileService {
     }
 
     /**
-     * 파일 삭제 (Soft Delete)
+     * 파일 삭제 (소프트 삭제)
      */
     @Transactional
-    public void deleteFile(String fileUid) {
-        AttachedFile file = fileRepository.findByFileUidAndDelYn(fileUid, false)
-                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + fileUid));
+    public void deleteFile(String id) {
+        AttachedFile file = fileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + id));
+
+        if (file.getIsDel()) {
+            throw new RuntimeException("이미 삭제된 파일입니다: " + id);
+        }
 
         file.softDelete();
         fileRepository.save(file);
@@ -248,16 +252,16 @@ public class AttachedFileService {
     }
 
     /**
-     * 여러 파일 삭제
+     * 여러 파일 삭제 (소프트 삭제)
      */
     @Transactional
-    public void deleteFiles(List<String> fileUids) {
-        for (String fileUid : fileUids) {
+    public void deleteFiles(List<String> fileIds) {
+        for (String fileId : fileIds) {
             try {
-                deleteFile(fileUid);
+                deleteFile(fileId);
             } catch (Exception e) {
-                log.error("파일 삭제 실패: {}", fileUid, e);
-                throw new RuntimeException("파일 삭제 중 오류 발생: " + fileUid);
+                log.error("파일 삭제 실패: {}", fileId, e);
+                throw new RuntimeException("파일 삭제 중 오류 발생: " + fileId);
             }
         }
     }
@@ -266,9 +270,9 @@ public class AttachedFileService {
      * 파일 물리적 삭제 (실제 파일 삭제)
      */
     @Transactional
-    public void permanentDeleteFile(String fileUid) throws IOException {
-        AttachedFile file = fileRepository.findById(fileUid)
-                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + fileUid));
+    public void permanentDeleteFile(String id) throws IOException {
+        AttachedFile file = fileRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("파일을 찾을 수 없습니다: " + id));
 
         // 물리적 파일 삭제
         File physicalFile = new File(file.getFilePath(), file.getFileNm());
@@ -312,15 +316,13 @@ public class AttachedFileService {
             dir.mkdirs();
         }
 
-        // 파일 저장
-        String fileUid = generateFileUid();
-        String storedFileName = fileUid + fileExtension;
+        // 저장될 파일명 생성 (UUID + 확장자)
+        String storedFileName = UUID.randomUUID().toString().replace("-", "") + fileExtension;
         File destFile = new File(filePath, storedFileName);
         file.transferTo(destFile);
 
         // DB에 저장하지 않고 DTO만 반환 (에디터 이미지는 별도 관리)
         return AttachedFileDTO.builder()
-                .fileUid(fileUid)
                 .fileOriginNm(originalFileName)
                 .fileType(fileExtension)
                 .filePath(filePath)

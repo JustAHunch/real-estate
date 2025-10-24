@@ -48,12 +48,12 @@ public class AttachedFileController {
 
     /**
      * 단일 파일 조회
-     * GET /api/v1/files/{fileUid}
+     * GET /api/v1/files/{id}
      */
-    @GetMapping("/{fileUid}")
-    public ResponseEntity<Map<String, Object>> getFile(@PathVariable String fileUid) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getFile(@PathVariable String id) {
         try {
-            AttachedFileDTO file = fileService.getFile(fileUid);
+            AttachedFileDTO file = fileService.getFile(id);
             return ResponseEntity.ok(Map.of("success", true, "data", file));
         } catch (Exception e) {
             log.error("파일 조회 실패: {}", e.getMessage(), e);
@@ -97,14 +97,14 @@ public class AttachedFileController {
 
     /**
      * 파일 다운로드
-     * GET /api/v1/files/download/{fileUid}
+     * GET /api/v1/files/download/{id}
      */
-    @GetMapping("/download/{fileUid}")
+    @GetMapping("/download/{id}")
     public void downloadFile(
-            @PathVariable String fileUid,
+            @PathVariable String id,
             HttpServletResponse response) {
         try {
-            fileService.downloadFile(fileUid, response);
+            fileService.downloadFile(id, response);
         } catch (Exception e) {
             log.error("파일 다운로드 실패: {}", e.getMessage(), e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -113,15 +113,15 @@ public class AttachedFileController {
 
     /**
      * 여러 파일 ZIP 다운로드
-     * GET /api/v1/files/download-zip?fileUids=uid1,uid2,uid3
+     * GET /api/v1/files/download-zip?fileIds=id1,id2,id3
      */
     @GetMapping("/download-zip")
     public void downloadFilesAsZip(
-            @RequestParam String fileUids,
+            @RequestParam String fileIds,
             HttpServletResponse response) {
         try {
-            List<String> fileUidList = Arrays.asList(fileUids.split(","));
-            fileService.downloadFilesAsZip(fileUidList, response);
+            List<String> fileIdList = Arrays.asList(fileIds.split(","));
+            fileService.downloadFilesAsZip(fileIdList, response);
         } catch (Exception e) {
             log.error("ZIP 파일 다운로드 실패: {}", e.getMessage(), e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -130,12 +130,12 @@ public class AttachedFileController {
 
     /**
      * 파일 삭제 (Soft Delete)
-     * DELETE /api/v1/files/{fileUid}
+     * DELETE /api/v1/files/{id}
      */
-    @DeleteMapping("/{fileUid}")
-    public ResponseEntity<Map<String, Object>> deleteFile(@PathVariable String fileUid) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteFile(@PathVariable String id) {
         try {
-            fileService.deleteFile(fileUid);
+            fileService.deleteFile(id);
             return ResponseEntity.ok(Map.of("success", true, "message", "파일이 삭제되었습니다."));
         } catch (Exception e) {
             log.error("파일 삭제 실패: {}", e.getMessage(), e);
@@ -152,16 +152,16 @@ public class AttachedFileController {
     public ResponseEntity<Map<String, Object>> deleteFiles(
             @RequestBody Map<String, List<String>> request) {
         try {
-            List<String> fileUids = request.get("fileUids");
-            if (fileUids == null || fileUids.isEmpty()) {
+            List<String> fileIds = request.get("fileIds");
+            if (fileIds == null || fileIds.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("success", false, "message", "삭제할 파일을 선택해주세요."));
             }
 
-            fileService.deleteFiles(fileUids);
+            fileService.deleteFiles(fileIds);
             return ResponseEntity.ok(Map.of(
                     "success", true,
-                    "message", fileUids.size() + "개 파일이 삭제되었습니다."));
+                    "message", fileIds.size() + "개 파일이 삭제되었습니다."));
         } catch (Exception e) {
             log.error("파일 일괄 삭제 실패: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
