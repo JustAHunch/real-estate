@@ -211,16 +211,26 @@ public class PropertyService {
         PropertyDTO dto = new PropertyDTO();
         dto.setId(property.getId());
         dto.setPropertyType(property.getPropertyType());
+        dto.setPropertyName(property.getPropertyName());
+
+        // 주소 정보
+        dto.setPostalCode(property.getPostalCode());
+        dto.setRoadAddress(property.getRoadAddress());
+        dto.setJibunAddress(property.getJibunAddress());
         dto.setAddress(property.getAddress());
         dto.setDetailAddress(property.getDetailAddress());
         dto.setLatitude(property.getLatitude());
         dto.setLongitude(property.getLongitude());
+
+        // 거래 정보
         dto.setTransactionType(property.getTransactionType());
         dto.setPrice(property.getPrice());
         dto.setDeposit(property.getDeposit());
         dto.setMonthlyRent(property.getMonthlyRent());
+        dto.setMaintenanceFee(property.getMaintenanceFee());
+        dto.setMoveInDate(property.getMoveInDate());
 
-        // 추가 필드 매핑
+        // 매물 상세 정보
         dto.setAreaPyeong(property.getAreaPyeong());
         dto.setFloor(property.getFloor());
         dto.setDirection(property.getDirection());
@@ -228,11 +238,26 @@ public class PropertyService {
         dto.setMoveInType(property.getMoveInType());
         dto.setBathroom(property.getBathroom());
         dto.setBuildingUsage(property.getBuildingUsage());
+
+        // 추가 정보
+        dto.setDirections(property.getDirections());
+        dto.setPhotoNote(property.getPhotoNote());
         dto.setManagerContact(property.getManagerContact());
+        dto.setPrivateNotes(property.getPrivateNotes());
+
+        // 상태 정보
+        dto.setStatus(property.getStatus());
+        dto.setIsVisible(property.getIsVisible());
+        dto.setFeatured(property.getFeatured());
 
         // 이미지 URL 문자열을 리스트로 변환
         if (property.getPhotoUrls() != null && !property.getPhotoUrls().isEmpty()) {
-            dto.setImages(Arrays.asList(property.getPhotoUrls().split(",")));
+            List<String> imageUrls = Arrays.stream(property.getPhotoUrls().split(","))
+                    .map(String::trim)
+                    .filter(url -> !url.isEmpty())
+                    .map(url -> "/images/" + url)  // 이미지 URL 경로 추가
+                    .collect(Collectors.toList());
+            dto.setImages(imageUrls);
         }
 
         dto.setDescription(property.getDescription());
@@ -246,17 +271,29 @@ public class PropertyService {
         if (dto.getId() != null) {
             property.setId(dto.getId());
         }
+
+        // 기본 정보
         property.setPropertyType(dto.getPropertyType());
+        property.setPropertyName(dto.getPropertyName());
+
+        // 주소 정보
+        property.setPostalCode(dto.getPostalCode());
+        property.setRoadAddress(dto.getRoadAddress());
+        property.setJibunAddress(dto.getJibunAddress());
         property.setAddress(dto.getAddress());
         property.setDetailAddress(dto.getDetailAddress());
         property.setLatitude(dto.getLatitude());
         property.setLongitude(dto.getLongitude());
+
+        // 거래 정보
         property.setTransactionType(dto.getTransactionType());
         property.setPrice(dto.getPrice());
         property.setDeposit(dto.getDeposit());
         property.setMonthlyRent(dto.getMonthlyRent());
+        property.setMaintenanceFee(dto.getMaintenanceFee());
+        property.setMoveInDate(dto.getMoveInDate());
 
-        // 추가 필드 매핑
+        // 매물 상세 정보
         property.setAreaPyeong(dto.getAreaPyeong());
         property.setFloor(dto.getFloor());
         property.setDirection(dto.getDirection());
@@ -264,30 +301,53 @@ public class PropertyService {
         property.setMoveInType(dto.getMoveInType());
         property.setBathroom(dto.getBathroom());
         property.setBuildingUsage(dto.getBuildingUsage());
+
+        // 추가 정보
+        property.setDirections(dto.getDirections());
+        property.setPhotoNote(dto.getPhotoNote());
         property.setManagerContact(dto.getManagerContact());
+        property.setPrivateNotes(dto.getPrivateNotes());
+
+        // 상태 정보
+        property.setStatus(dto.getStatus());
+        property.setIsVisible(dto.getIsVisible());
+        property.setFeatured(dto.getFeatured());
 
         // 이미지 리스트를 콤마로 구분된 문자열로 변환
         if (dto.getImages() != null && !dto.getImages().isEmpty()) {
             property.setPhotoUrls(String.join(",", dto.getImages()));
         }
 
+        // 설명
         property.setDescription(dto.getDescription());
+
         return property;
     }
 
 
     private void updatePropertyFields(Property property, PropertyDTO dto) {
+        // 기본 정보
         property.setPropertyType(dto.getPropertyType());
+        property.setPropertyName(dto.getPropertyName());
+
+        // 주소 정보
+        property.setPostalCode(dto.getPostalCode());
+        property.setRoadAddress(dto.getRoadAddress());
+        property.setJibunAddress(dto.getJibunAddress());
         property.setAddress(dto.getAddress());
         property.setDetailAddress(dto.getDetailAddress());
         property.setLatitude(dto.getLatitude());
         property.setLongitude(dto.getLongitude());
+
+        // 거래 정보
         property.setTransactionType(dto.getTransactionType());
         property.setPrice(dto.getPrice());
         property.setDeposit(dto.getDeposit());
         property.setMonthlyRent(dto.getMonthlyRent());
+        property.setMaintenanceFee(dto.getMaintenanceFee());
+        property.setMoveInDate(dto.getMoveInDate());
 
-        // 추가 필드 업데이트
+        // 매물 상세 정보
         property.setAreaPyeong(dto.getAreaPyeong());
         property.setFloor(dto.getFloor());
         property.setDirection(dto.getDirection());
@@ -295,8 +355,19 @@ public class PropertyService {
         property.setMoveInType(dto.getMoveInType());
         property.setBathroom(dto.getBathroom());
         property.setBuildingUsage(dto.getBuildingUsage());
-        property.setManagerContact(dto.getManagerContact());
 
+        // 추가 정보
+        property.setDirections(dto.getDirections());
+        property.setPhotoNote(dto.getPhotoNote());
+        property.setManagerContact(dto.getManagerContact());
+        property.setPrivateNotes(dto.getPrivateNotes());
+
+        // 상태 정보
+        property.setStatus(dto.getStatus());
+        property.setIsVisible(dto.getIsVisible());
+        property.setFeatured(dto.getFeatured());
+
+        // 설명
         property.setDescription(dto.getDescription());
     }
 }

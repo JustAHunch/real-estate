@@ -281,27 +281,8 @@
                             <div class="card-body">
                                 <!-- 기존 이미지 목록 -->
                                 <div id="existingImages" class="mb-3">
-                                    <div class="image-item mb-2" >
-                                        <div class="card">
-                                            <img  src="/images/beom_logo.png" class="card-img-top" alt="매물 이미지">
-                                            <div class="card-body p-2">
-                                                <button type="button" class="btn btn-danger btn-sm btn-block"
-                                                        onclick="removeImage(this)" >
-                                                    <i class="fas fa-trash"></i> 삭제
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 샘플 이미지 (실제 데이터가 없을 때) -->
-                                    <div class="image-item mb-2">
-                                        <div class="card">
-                                            <img src="/images/beom_logo.png" class="card-img-top" alt="매물 이미지">
-                                            <div class="card-body p-2">
-                                                <button type="button" class="btn btn-danger btn-sm btn-block" onclick="removeImage(this)">
-                                                    <i class="fas fa-trash"></i> 삭제
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div class="alert alert-info" id="noImagesAlert">
+                                        <i class="fas fa-info-circle"></i> 등록된 이미지가 없습니다.
                                     </div>
                                 </div>
 
@@ -665,6 +646,15 @@
     function loadExistingImages(images) {
         const container = $('#existingImages');
         container.empty();
+
+        if (!images || images.length === 0) {
+            container.html(`
+                <div class="alert alert-info" id="noImagesAlert">
+                    <i class="fas fa-info-circle"></i> 등록된 이미지가 없습니다.
+                </div>
+            `);
+            return;
+        }
 
         images.forEach(function(imageUrl) {
             const imageHtml = `
