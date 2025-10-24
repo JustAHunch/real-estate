@@ -3,6 +3,7 @@ package com.hunch.realestate.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,14 +22,17 @@ public abstract class BaseEntity {
 
     @Id
     @Column(name = "id", columnDefinition = "VARCHAR(36)")
+    @Comment("ID (UUID)")
     private String id;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Comment("생성 일시")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
+    @Comment("수정 일시")
     private LocalDateTime updatedAt;
 
     @PrePersist

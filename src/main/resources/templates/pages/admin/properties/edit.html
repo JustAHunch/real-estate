@@ -132,9 +132,9 @@
                                             <label for="transactionType">거래 종류 <span class="text-danger">*</span></label>
                                             <select class="form-control select2" id="transactionType" name="transactionType" required>
                                                 <option value="">거래 종류 선택</option>
-                                                <option value="매매" >매매</option>
-                                                <option value="전세" >전세</option>
-                                                <option value="월세" >월세</option>
+                                                <option value="SALE" >매매</option>
+                                                <option value="JEONSE" >전세</option>
+                                                <option value="MONTHLY" >월세</option>
                                             </select>
                                         </div>
                                     </div>
@@ -158,8 +158,23 @@
                                         <div class="form-group">
                                             <label for="monthlyRent">월세 (만원)</label>
                                             <input type="number" class="form-control" id="monthlyRent" name="monthlyRent"
-                                                   
+
                                                    placeholder="0" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="maintenanceFee">관리비 (만원)</label>
+                                            <input type="number" class="form-control" id="maintenanceFee" name="maintenanceFee"
+                                                   placeholder="0" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="moveInDate">입주 가능일</label>
+                                            <input type="date" class="form-control" id="moveInDate" name="moveInDate">
                                         </div>
                                     </div>
                                 </div>
@@ -177,7 +192,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="description">매물 설명</label>
-                                    <textarea id="summernote" name="description" >
+                                    <textarea id="description" name="description" >
                                         <p>강남역 도보 3분 거리의 프리미엄 오피스텔입니다.</p>
                                         <ul>
                                             <li>최고급 마감재 사용</li>
@@ -185,6 +200,41 @@
                                             <li>편리한 교통 접근성</li>
                                         </ul>
                                     </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 추가 정보 카드 -->
+                        <div class="card card-secondary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    추가 정보
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="directions">오시는 길</label>
+                                    <textarea class="form-control" id="directions" name="directions" rows="3"
+                                              placeholder="매물까지 오는 길을 설명해주세요 (예: OO역 3번 출구에서 도보 5분)"></textarea>
+                                    <small class="form-text text-muted">고객이 매물을 방문하는 데 도움이 되는 정보를 입력하세요.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="managerContact">담당자 연락처</label>
+                                    <input type="text" class="form-control" id="managerContact" name="managerContact"
+                                           placeholder="담당자 이름 및 연락처 (예: 김철수 010-1234-5678)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="photoNote">사진 메모</label>
+                                    <textarea class="form-control" id="photoNote" name="photoNote" rows="2"
+                                              placeholder="사진 촬영과 관련된 메모 (내부용)"></textarea>
+                                    <small class="form-text text-muted">사진 촬영 날짜, 특이사항 등을 기록하세요.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="privateNotes">관리자 메모 (비공개)</label>
+                                    <textarea class="form-control" id="privateNotes" name="privateNotes" rows="3"
+                                              placeholder="내부 관리용 메모 (고객에게 노출되지 않습니다)"></textarea>
+                                    <small class="form-text text-muted">매물 관리를 위한 내부 메모입니다.</small>
                                 </div>
                             </div>
                         </div>
@@ -204,10 +254,9 @@
                                 <div class="form-group">
                                     <label for="status">상태</label>
                                     <select class="form-control select2" id="status" name="status">
-                                        <option value="AVAILABLE" >판매중</option>
-                                        <option value="RESERVED" >예약중</option>
-                                        <option value="SOLD" >거래완료</option>
-                                        <option value="HIDDEN" >숨김</option>
+                                        <option value="판매중" >판매중</option>
+                                        <option value="예약중" >예약중</option>
+                                        <option value="거래완료" >거래완료</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -320,7 +369,7 @@
         });
 
         // Summernote 초기화
-        $('#summernote').summernote({
+        $('#description').summernote({
             height: 300,
             lang: 'ko-KR',
             toolbar: [
@@ -347,8 +396,8 @@
             const label = fileCount > 1 ? `${fileCount}개 파일 선택됨` : fileName;
             $(this).siblings('.custom-file-label').addClass("selected").html(label);
 
-            // 새 이미지 미리보기
-            showNewImagePreviews(this.files);
+            // 새 이미지 즉시 업로드
+            uploadNewImages(this.files);
             hasUnsavedChanges = true;
             $('#unsavedAlert').show();
         });
@@ -508,18 +557,35 @@
                     $('[name="moveInType"]').val(property.moveInType);
                 }
                 if (property.maintenanceFee) {
-                    $('[name="maintenanceFee"]').val(property.maintenanceFee);
+                    $('#maintenanceFee').val(property.maintenanceFee);
+                }
+                if (property.moveInDate) {
+                    $('#moveInDate').val(property.moveInDate);
                 }
 
                 // 상세 설명
                 if (property.description) {
-                    $('#summernote').summernote('code', property.description);
+                    $('#description').summernote('code', property.description);
                 }
 
                 // 상태 정보
-                $('#status').val(property.status || 'AVAILABLE').trigger('change');
+                $('#status').val(property.status || '판매중').trigger('change');
                 if (property.featured) {
                     $('#featured').prop('checked', true);
+                }
+
+                // 추가 정보 필드
+                if (property.directions) {
+                    $('#directions').val(property.directions);
+                }
+                if (property.managerContact) {
+                    $('#managerContact').val(property.managerContact);
+                }
+                if (property.photoNote) {
+                    $('#photoNote').val(property.photoNote);
+                }
+                if (property.privateNotes) {
+                    $('#privateNotes').val(property.privateNotes);
                 }
 
                 // 동적 필드가 있는 경우 처리
@@ -718,27 +784,98 @@
         });
     }
 
-    // 새 이미지 미리보기
-    function showNewImagePreviews(files) {
+    // 새 이미지 업로드
+    function uploadNewImages(files) {
         const container = $('#newImagePreviews');
         container.empty();
+
+        // 매물명과 UID 가져오기
+        const propertyName = $('#propertyName').val();
+        const propertyUid = $('#propertyId').val();
 
         Array.from(files).forEach(function(file, index) {
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
+                const imageId = 'new_img_' + Date.now() + '_' + index;
+
                 reader.onload = function(e) {
                     const previewHtml = `
-                        <div class="image-preview-item mb-2">
+                        <div class="image-preview-item mb-2" data-image-id="${imageId}">
                             <div class="card">
                                 <img src="${e.target.result}" class="card-img-top" alt="새 이미지" style="height: 150px; object-fit: cover;">
                                 <div class="card-body p-2">
                                     <small class="text-muted">${file.name}</small>
+                                    <div class="progress mt-2" style="height: 5px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>`;
                     container.append(previewHtml);
+
+                    // 서버로 업로드
+                    uploadImageToServer(file, imageId, propertyName, propertyUid);
                 };
                 reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 서버로 이미지 업로드
+    function uploadImageToServer(file, imageId, propertyName, propertyUid) {
+        const formData = new FormData();
+        formData.append('files', file);
+
+        // propertyName 추가
+        if (propertyName) {
+            formData.append('propertyName', propertyName);
+        }
+
+        // propertyUid 추가
+        if (propertyUid) {
+            formData.append('propertyUid', propertyUid);
+        }
+
+        $.ajax({
+            url: '/api/v1/files/upload',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log('이미지 업로드 성공:', response);
+                // 진행바를 성공 표시로 변경
+                const progressBar = $(`.image-preview-item[data-image-id="${imageId}"] .progress-bar`);
+                progressBar.removeClass('progress-bar-striped progress-bar-animated')
+                    .addClass('bg-success')
+                    .css('width', '100%');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '업로드 완료',
+                    text: file.name + '이 업로드되었습니다.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            },
+            error: function(xhr) {
+                console.error('이미지 업로드 실패:', xhr);
+                // 진행바를 실패 표시로 변경
+                const progressBar = $(`.image-preview-item[data-image-id="${imageId}"] .progress-bar`);
+                progressBar.removeClass('progress-bar-striped progress-bar-animated')
+                    .addClass('bg-danger')
+                    .css('width', '100%');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '업로드 실패',
+                    text: file.name + ' 업로드에 실패했습니다.'
+                });
+
+                // 실패한 미리보기 제거
+                setTimeout(() => {
+                    $(`.image-preview-item[data-image-id="${imageId}"]`).remove();
+                }, 2000);
             }
         });
     }
@@ -793,6 +930,7 @@
 
     // 폼 제출
     function submitForm() {
+        const propertyId = $('#propertyId').val();
         const formData = new FormData($('#propertyEditForm')[0]);
 
         // 로딩 표시
@@ -804,21 +942,53 @@
             }
         });
 
-        // AJAX 요청 (실제 구현시)
-        setTimeout(() => {
-            Swal.fire({
-                title: '수정 완료',
-                text: '매물 정보가 성공적으로 수정되었습니다.',
-                icon: 'success'
-            }).then(() => {
-                hasUnsavedChanges = false;
-                window.location.href = '/admin/properties/list';
-            });
-        }, 1500);
+        // 실제 AJAX 요청
+        $.ajax({
+            url: `/api/v1/admin/properties/${propertyId}`,
+            method: 'PUT',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    title: '수정 완료',
+                    text: '매물 정보가 성공적으로 수정되었습니다.',
+                    icon: 'success'
+                }).then(() => {
+                    hasUnsavedChanges = false;
+                    window.location.href = '/admin/properties/list';
+                });
+            },
+            error: function(xhr) {
+                Swal.close();
+                let errorMsg = '매물 정보 수정 중 오류가 발생했습니다.';
+
+                if (xhr.responseJSON) {
+                    // 백엔드에서 반환한 에러 메시지
+                    if (typeof xhr.responseJSON === 'string') {
+                        errorMsg = xhr.responseJSON;
+                    } else if (xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                } else if (xhr.responseText) {
+                    errorMsg = xhr.responseText;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '수정 실패',
+                    text: errorMsg
+                });
+
+                log.error('매물 수정 실패:', xhr);
+            }
+        });
     }
 
     // 매물 삭제
     function deleteProperty() {
+        const propertyId = $('#propertyId').val();
+
         // 로딩 표시
         Swal.fire({
             title: '매물 삭제 중...',
@@ -828,17 +998,44 @@
             }
         });
 
-        // AJAX 요청 (실제 구현시)
-        setTimeout(() => {
-            Swal.fire({
-                title: '삭제 완료',
-                text: '매물이 성공적으로 삭제되었습니다.',
-                icon: 'success'
-            }).then(() => {
-                hasUnsavedChanges = false;
-                window.location.href = '/admin/properties/list';
-            });
-        }, 1500);
+        // 실제 AJAX 요청
+        $.ajax({
+            url: `/api/v1/admin/properties/${propertyId}`,
+            method: 'DELETE',
+            success: function(response) {
+                Swal.fire({
+                    title: '삭제 완료',
+                    text: '매물이 성공적으로 삭제되었습니다.',
+                    icon: 'success'
+                }).then(() => {
+                    hasUnsavedChanges = false;
+                    window.location.href = '/admin/properties/list';
+                });
+            },
+            error: function(xhr) {
+                Swal.close();
+                let errorMsg = '매물 삭제 중 오류가 발생했습니다.';
+
+                if (xhr.responseJSON) {
+                    // 백엔드에서 반환한 에러 메시지
+                    if (typeof xhr.responseJSON === 'string') {
+                        errorMsg = xhr.responseJSON;
+                    } else if (xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                } else if (xhr.responseText) {
+                    errorMsg = xhr.responseText;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '삭제 실패',
+                    text: errorMsg
+                });
+
+                console.error('매물 삭제 실패:', xhr);
+            }
+        });
     }
     /*]]>*/
     </script>

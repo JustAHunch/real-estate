@@ -14,7 +14,7 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
       connection-timeout: 30000
-  
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -40,6 +40,14 @@ spring:
     restart:
       enabled: true
 
+  # Multipart 설정
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+      file-size-threshold: 2KB
+
 server:
   port: 8081
   servlet:
@@ -47,20 +55,19 @@ server:
       charset: UTF-8
       force: true
 
-# 파일 저장 경로
+# 첨부파일 설정
 app:
+  system-name: real-estate
   storage:
     # Windows 환경 경로 설정
-    base-path: C:/git/study/real-estate/data
-    # JSON 파일 저장 경로
-    json:
-      users: ${app.storage.base-path}/users.json
-      properties: ${app.storage.base-path}/properties.json
-      transactions: ${app.storage.base-path}/transactions.json
-    # 업로드 파일 저장 경로
-    files:
-      images: ${app.storage.base-path}/images
-      documents: ${app.storage.base-path}/documents
+    base-path: C:/beom_realestate/attfile
+    # 파일 저장 경로
+    upload-path: ${app.storage.base-path}/upload/
+    temp-path: ${app.storage.base-path}/temp/
+    attfile-path: ${app.storage.base-path}/
+    editorimg-path: ${app.storage.base-path}/editorimg/
+    block-ext: .jsp;.php;.asp;.html;.perl;.sh;.htm;.exe;.dll
+    maxfileSize: 52428800  # 50MB (50 * 1024 * 1024)
 
 logging:
   level:

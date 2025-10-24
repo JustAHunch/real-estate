@@ -25,7 +25,12 @@ public class CompanyInfoService {
     public CompanyInfoDTO getCompanyInfo() {
         try {
             CompanyInfo companyInfo = companyInfoRepository.findFirstByOrderByCreatedAtDesc()
-                    .orElseGet(null);
+                    .orElse(null);
+
+            if (companyInfo == null) {
+                log.warn("등록된 부동산 정보가 없습니다.");
+                return null;
+            }
 
             return CompanyInfoDTO.builder()
                     .businessName(companyInfo.getBusinessName())
