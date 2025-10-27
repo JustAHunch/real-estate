@@ -96,11 +96,11 @@
                                         </div>
                                     </div>
                                     <input type="text" class="form-control mb-2" id="roadAddress" name="roadAddress"
-                                            placeholder="도로명 주소" readonly>
+                                            placeholder="도로명 주소" readonly required>
                                     <input type="text" class="form-control mb-2" id="jibunAddress" name="jibunAddress"
                                             placeholder="지번 주소" readonly>
-                                    <input type="text" class="form-control" id="address" name="address"
-                                            placeholder="기본 주소 (자동입력)" readonly required>
+                                    <!-- Hidden field for address (roadAddress 또는 jibunAddress 값) -->
+                                    <input type="hidden" id="address" name="address">
                                     <!-- Hidden fields for coordinates -->
                                     <input type="hidden" id="latitude" name="latitude" >
                                     <input type="hidden" id="longitude" name="longitude" >
@@ -259,14 +259,14 @@
                                         <option value="거래완료" >거래완료</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="featured">추천 매물</label>
-                                    <div class="custom-control custom-switch">
-                                        <input type="checkbox" class="custom-control-input" id="featured" name="featured"
-                                               >
-                                        <label class="custom-control-label" for="featured">메인 페이지에 노출</label>
-                                    </div>
-                                </div>
+<!--                                <div class="form-group">-->
+<!--                                    <label for="featured">추천 매물</label>-->
+<!--                                    <div class="custom-control custom-switch">-->
+<!--                                        <input type="checkbox" class="custom-control-input" id="featured" name="featured"-->
+<!--                                               >-->
+<!--                                        <label class="custom-control-label" for="featured">메인 페이지에 노출</label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
 
@@ -333,23 +333,20 @@
 
     <script>
     /*<![CDATA[*/
-    $(document).ready(function() {
-        let hasUnsavedChanges = false;
-        const propertyId = $('#propertyId').val();
+    let hasUnsavedChanges = false; // 전역 변수로 이동
 
-        // 매물 데이터 로드
-        if (propertyId) {
-            loadPropertyData(propertyId);
-        }
+    $(document).ready(function() {
+        const propertyId = $('#propertyId').val();
 
         // Select2 초기화
         $('.select2').select2({
             theme: 'bootstrap',
             placeholder: '선택하세요',
-            allowClear: true
+            allowClear: true,
+            width: '100%'
         });
 
-        // Summernote 초기화
+        // Summernote 초기화 (초기에는 onChange 콜백 없이)
         $('#description').summernote({
             height: 300,
             lang: 'ko-KR',
@@ -361,14 +358,16 @@
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
                 ['view', ['fullscreen', 'codeview', 'help']]
-            ],
-            callbacks: {
-                onChange: function() {
-                    hasUnsavedChanges = true;
-                    $('#unsavedAlert').show();
-                }
-            }
+            ]
         });
+
+        // 매물 데이터 로드
+        if (propertyId) {
+            loadPropertyData(propertyId);
+        } else {
+            // 새 매물 등록인 경우 바로 변경 감지 활성화
+            enableChangeDetection();
+        }
 
         // 파일 입력 라벨 업데이트
         $('.custom-file-input').on('change', function() {
@@ -379,12 +378,6 @@
 
             // 새 이미지 즉시 업로드
             uploadNewImages(this.files);
-            hasUnsavedChanges = true;
-            $('#unsavedAlert').show();
-        });
-
-        // 폼 변경 감지
-        $('#propertyEditForm input, #propertyEditForm select').on('change', function() {
             hasUnsavedChanges = true;
             $('#unsavedAlert').show();
         });
@@ -459,7 +452,7 @@
                     // 기본 주소 선택 (도로명 우선, 없으면 지번)
                     const baseAddress = data.roadAddress || data.jibunAddress;
                     $('#address').val(baseAddress);
-                    $('#address').removeClass('is-invalid');
+                    $('#roadAddress').removeClass('is-invalid');
 
                     // 좌표 변환
                     getCoordinates(baseAddress);
@@ -480,6 +473,39 @@
             }
         });
     });
+
+    // 변경 감지 활성화
+    function enableChangeDetection() {
+        // 폼 변경 감지
+        $('#propertyEditForm input, #propertyEditForm select, #propertyEditForm textarea').not('#description').on('change input', function() {
+            hasUnsavedChanges = true;
+            $('#unsavedAlert').show();
+        });
+
+        // Summernote onChange 활성화
+        $('#description').summernote('destroy');
+        $('#description').summernote({
+            height: 300,
+            lang: 'ko-KR',
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            callbacks: {
+                onChange: function() {
+                    hasUnsavedChanges = true;
+                    $('#unsavedAlert').show();
+                }
+            }
+        });
+
+        console.log('변경 감지 활성화 완료');
+    }
 
     // 매물 데이터 로드
     function loadPropertyData(propertyId) {
@@ -581,6 +607,11 @@
                 }
 
                 console.log('매물 데이터 로드 완료:', property);
+
+                // 데이터 로드 완료 후 변경 감지 활성화
+                setTimeout(function() {
+                    enableChangeDetection();
+                }, 500);
             },
             error: function(xhr) {
                 Swal.close();
@@ -895,7 +926,14 @@
     // 폼 유효성 검사
     function validateForm() {
         let isValid = true;
-        const requiredFields = ['propertyName', 'propertyType', 'address', 'transactionType', 'price'];
+
+        // address 필드를 roadAddress 또는 jibunAddress로 설정
+        const roadAddress = $('#roadAddress').val();
+        const jibunAddress = $('#jibunAddress').val();
+        const baseAddress = roadAddress || jibunAddress;
+        $('#address').val(baseAddress);
+
+        const requiredFields = ['propertyName', 'propertyType', 'roadAddress', 'transactionType', 'price'];
 
         requiredFields.forEach(function(fieldName) {
             const field = $(`[name="${fieldName}"]`);

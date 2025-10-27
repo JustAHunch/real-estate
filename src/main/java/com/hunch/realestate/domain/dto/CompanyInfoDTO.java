@@ -12,8 +12,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class CompanyInfoDTO {
     private String businessName;      // 상호명
-    private String address1;          // 주소 1
-    private String address2;          // 주소 2
+    private String address1;          // 주소
+    private String address2;          // 상세주소
     private String directions;        // 찾아오는 길
     private String phoneNumber;       // 전화번호
     private String faxNumber;         // 팩스

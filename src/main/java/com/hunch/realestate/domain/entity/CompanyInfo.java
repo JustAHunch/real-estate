@@ -26,17 +26,17 @@ public class CompanyInfo extends BaseEntity {
     private String businessName;
 
     /**
-     * 주소 1
+     * 주소
      */
     @Column(name = "address1", length = 500)
-    @Comment("주소 1")
+    @Comment("주소")
     private String address1;
 
     /**
-     * 주소 2
+     * 상세주소
      */
     @Column(name = "address2", length = 500)
-    @Comment("주소 2 (상세주소)")
+    @Comment("상세주소")
     private String address2;
 
     /**

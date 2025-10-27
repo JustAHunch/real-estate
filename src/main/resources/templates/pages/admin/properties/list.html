@@ -113,32 +113,34 @@
                 </div>
                 <div class="card-body">
                     <!-- 툴바 -->
-                    <div class="table-toolbar mb-3">
-                        <div class="btn-group btn-group-export">
-                            <button type="button" class="btn btn-secondary btn-sm" id="btnExcelExport">
-                                <i class="fas fa-file-excel mr-1"></i>Excel
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="btnPdfExport">
-                                <i class="fas fa-file-pdf mr-1"></i>PDF
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-sm" id="btnPrint">
-                                <i class="fas fa-print mr-1"></i>인쇄
-                            </button>
-                        </div>
-                    </div>
+<!--                    <div class="table-toolbar mb-3">-->
+<!--                        <div class="btn-group btn-group-export">-->
+<!--                            <button type="button" class="btn btn-secondary btn-sm" id="btnExcelExport">-->
+<!--                                <i class="fas fa-file-excel mr-1"></i>Excel-->
+<!--                            </button>-->
+<!--                            <button type="button" class="btn btn-secondary btn-sm" id="btnPdfExport">-->
+<!--                                <i class="fas fa-file-pdf mr-1"></i>PDF-->
+<!--                            </button>-->
+<!--                            <button type="button" class="btn btn-secondary btn-sm" id="btnPrint">-->
+<!--                                <i class="fas fa-print mr-1"></i>인쇄-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                     <!-- 테이블 -->
                     <div class="table-responsive">
                         <table id="propertiesTable" class="table table-bordered table-hover table-striped">
                             <thead class="thead-light">
                                 <tr>
+                                    <th>매물명</th>
                                     <th>주소</th>
-                                    <th width="100">종류</th>
-                                    <th width="120">거래유형</th>
-                                    <th width="140">가격</th>
-                                    <th width="100">평수</th>
-                                    <th width="120">등록일</th>
-                                    <th width="120">관리</th>
+                                    <th>종류</th>
+                                    <th>거래유형</th>
+                                    <th>평수</th>
+                                    <th>가격</th>
+                                    <th>상태</th>
+                                    <th>등록일시</th>
+                                    <th>관리</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,6 +181,7 @@
             responsive: true,
             processing: true,
             serverSide: true,
+            autoWidth: false,
             ajax: {
                 url: '/api/v1/admin/properties',
                 type: 'GET',
@@ -201,9 +204,19 @@
             },
             pageLength: 10,
             lengthMenu: [/*[+*/ [10, 25, 50, 100], ["10", "25", "50", "100"] /*+]*/],
-            order: [/*[+*/ [5, 'desc'] /*+]*/], // 등록일 기준 내림차순
+            order: [/*[+*/ [7, 'desc'] /*+]*/], // 등록일시 기준 내림차순
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
             columns: [
+                {
+                    data: 'propertyName',
+                    width: '350px',
+                    render: function(data, type, row) {
+                        if (!data) return '<span class="text-muted">-</span>';
+                        return '<a href="javascript:void(0)" onclick="editProperty(\'' + row.id + '\')" ' +
+                               'class="text-primary font-weight-bold" style="cursor: pointer;">' +
+                               data + '</a>';
+                    }
+                },
                 {
                     data: 'address',
                     render: function(data, type, row) {
@@ -215,6 +228,7 @@
                 },
                 {
                     data: 'propertyType',
+                    width: '80px',
                     render: function(data) {
                         const typeMap = {
                             'APARTMENT': '아파트',
@@ -227,10 +241,10 @@
                         const badgeColors = {
                             'APARTMENT': 'primary',
                             'VILLA': 'success',
-                            'ONE_ROOM': 'info',
+                            'ONE_ROOM': 'warning',
                             'TWOTHREE_ROOM': 'warning',
                             'COMMERCIAL': 'info',
-                            'STORE': 'warning'
+                            'STORE': 'info'
                         };
                         return '<span class="badge badge-' + (badgeColors[data] || 'secondary') + '">' +
                                (typeMap[data] || data) + '</span>';
@@ -238,23 +252,35 @@
                 },
                 {
                     data: 'transactionType',
+                    width: '60px',
                     render: function(data) {
                         const typeMap = {
                             'SALE': '매매',
                             'JEONSE': '전세',
                             'MONTHLY': '월세'
                         };
-                        const badgeColors = {
-                            'SALE': 'primary',
-                            'JEONSE': 'success',
-                            'MONTHLY': 'danger'
+                        let badgeColors;
+                        badgeColors = {
+                            'SALE': 'danger',
+                            'JEONSE': 'primary',
+                            'MONTHLY': 'success'
                         };
                         return '<span class="badge badge-' + (badgeColors[data] || 'secondary') + '">' +
                                (typeMap[data] || data) + '</span>';
                     }
                 },
                 {
+                    data: 'areaPyeong',
+                    width: '80px',
+                    render: function(data) {
+                        if (!data) return '-';
+                        const squareMeter = Math.round(data * 3.3058);
+                        return data + '평<br><small class="text-muted">(' + squareMeter + 'm²)</small>';
+                    }
+                },
+                {
                     data: null,
+                    width: '100px',
                     render: function(data, type, row) {
                         if (row.transactionType === 'SALE') {
                             return '<span class="font-weight-bold text-success">' +
@@ -270,19 +296,34 @@
                     }
                 },
                 {
-                    data: 'areaPyeong',
+                    data: 'status',
+                    width: '90px',
                     render: function(data) {
-                        return data ? data + '평' : '-';
+                        const statusMap = {
+                            '판매중': 'info',
+                            '예약중': 'warning',
+                            '거래완료': 'danger'
+                        };
+                        const badgeColor = statusMap[data] || 'info';
+                        return '<span class="badge badge-' + badgeColor + '">' + (data || '판매중') + '</span>';
                     }
                 },
                 {
                     data: 'createdAt',
+                    width: '170px',
                     render: function(data) {
-                        return data ? new Date(data).toLocaleDateString('ko-KR') : '-';
+                        return data ? new Date(data).toLocaleString('ko-KR', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : '-';
                     }
                 },
                 {
                     data: 'id',
+                    width: '100px',
                     orderable: false,
                     searchable: false,
                     render: function(data) {

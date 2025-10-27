@@ -40,7 +40,12 @@ public class PropertyService {
      * 매물 목록 조회 (페이징)
      */
     public PagingResult<PropertyDTO> getProperties(PropertyType type, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        // updatedAt이 있으면 updatedAt DESC, 없으면 createdAt DESC로 정렬
+        Sort sort = Sort.by(
+                Sort.Order.desc("updatedAt").nullsLast(),
+                Sort.Order.desc("createdAt")
+        );
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<Property> propertyPage;
 
         if (type != null) {
