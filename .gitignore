@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+ 
+### Node / Playwright ###
+.history/
+node_modules/
+playwright-report/
+playwright/test-results/
+.playwright/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json

@@ -1,0 +1,67 @@
+# Cursor Rules for real-estate (Spring Boot / Java 17)
+
+- 기본 언어: 한국어
+- 코드 변경은 반드시 실제 파일에 적용. 설명만 하고 미적용 금지.
+- 기존 들여쓰기/스타일을 변경하지 말 것. 불필요한 리포맷 금지.
+- 작은 단위의 명확한 에디트만 수행. 관련 없는 리팩터링 금지.
+- 영향 범위와 테스트/빌드 방법을 간단히 안내.
+
+## 프로젝트 컨텍스트
+- 빌드: Maven (pom.xml), Java 17, Spring Boot 3.3.x
+- 스택: Spring Web, Security, Data JPA, Validation, Thymeleaf, Lombok, PostgreSQL
+- 소스: src/main/java/com/hunch/realestate/**
+- 리소스: src/main/resources/** (application.yml, 프로필, 템플릿, 정적 리소스)
+
+## 코드 스타일 (Java/Spring)
+- 네이밍: 전체 단어, 의미 중심. 메서드=동사, 변수=명사.
+- 가시성 최소화, 불필요한 public/static 지양.
+- 가드 클로즈 선호, 깊은 중첩 회피.
+- 예외: 런타임 예외로 도메인 의미 부여. 체크 예외 최소화.
+- 주석: 자명한 설명 금지. 의도/제약/보안/성능만.
+- Lombok: Getter/Setter/Builder 등 일관 사용. 불변은 Builder+final 고려.
+- JPA: 지연 로딩 기본, 컬렉션은 Set, N+1 회피. DTO 변환은 서비스/어댑터.
+- 트랜잭션: 서비스 계층 @Transactional, 읽기 전용은 readOnly=true.
+- 검증: @Valid + Bean Validation. 추가 규칙은 서비스에서.
+- REST: 컨트롤러 슬림, 로직은 서비스. 응답 포맷 일관.
+- 보안: SecurityConfig 준수, 민감 정보 로깅 금지, 권한 체크 보강.
+
+## 구조/레이아웃
+- 패키지: domain(entity/dto), repository, service, web(controller), config, common.
+- Thymeleaf: fragments/layouts 분리.
+- 설정: 공통 application.yml, 환경별 application-<profile>.yml. 비밀 값 외부화.
+
+## 테스트/빌드
+- JUnit 5. 통합은 @SpringBootTest, 서비스는 슬라이스/목 우선.
+- 빌드: ./mvnw clean verify, 실행: ./mvnw spring-boot:run
+- 스키마/데이터 스크립트 변경 시 영향 점검.
+
+## 작업 규칙 (Cursor)
+- 변경 전: 관련 코드 레퍼런스와 의도 1~2문장.
+- 변경 후: 무엇/왜/리스크/롤백 방법 간단히.
+- 대규모 변경은 단계적 커밋/PR.
+- 파일/디렉터리/함수/클래스 표기는 백틱(`) 사용.
+
+## 커밋/PR
+- Conventional Commits: feat/fix/refactor/docs/test/chore/build/perf
+- 본문 한국어, 72자 래핑 권장, 관련 이슈/맥락 언급.
+- PR 체크: 목적 명확성, 빌드/테스트 통과, 보안/마이그 영향, 문서 갱신.
+
+## 보안/개인정보
+- 비밀번호/토큰/민감 데이터 노출 금지(로그/응답/깃).
+- 설정은 프로필/환경변수 주입. 기본값만 yml에.
+- 파일 처리 시 확장자/용량/콘텐츠 타입 검증.
+
+## 성능/운영
+- 쿼리 수/시간 민감 경로 최적화 또는 캐싱.
+- 페이징은 필요한 필드만 조회.
+- 예외 중앙 처리(@ControllerAdvice), 표준 HTTP 상태/친화적 메시지.
+
+## 변경 원칙
+- 작게/안전하게/되돌리기 쉽게.
+- 기존 스타일 준수. 새 패턴은 근거/이점 명확할 때만.
+- 도메인 언어를 이름에 반영.
+
+---
+이 문서는 기본 베이스입니다. 팀 합의에 따라 수정/확장하세요.
+
+
