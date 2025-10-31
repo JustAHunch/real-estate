@@ -629,48 +629,7 @@
 
     // edit 페이지용 동적 필드 로드 (데이터 포함)
     function loadDynamicFieldsForEdit(propertyType, propertyData) {
-        $.ajax({
-            url: '/api/v1/admin/properties/property-type-fields',
-            method: 'GET',
-            data: { type: propertyType },
-            success: function(response) {
-                let fieldsHtml = '<div class="row">';
-
-                response.fields.forEach(function(field, index) {
-                    if (index % 2 === 0 && index > 0) {
-                        fieldsHtml += '</div><div class="row">';
-                    }
-
-                    const fieldValue = propertyData[field.fieldName] || '';
-
-                    fieldsHtml += `<div class="col-md-6">
-                        <div class="form-group">
-                            <label for="${field.fieldName}">${field.displayName}</label>`;
-
-                    if (field.fieldType === 'SELECT') {
-                        fieldsHtml += `<select class="form-control" id="${field.fieldName}" name="${field.fieldName}">
-                            <option value="">선택하세요</option>`;
-                        field.options.forEach(function(option) {
-                            const selected = fieldValue === option ? 'selected' : '';
-                            fieldsHtml += `<option value="${option}" ${selected}>${option}</option>`;
-                        });
-                        fieldsHtml += '</select>';
-                    } else {
-                        fieldsHtml += `<input type="${field.fieldType.toLowerCase()}"
-                            class="form-control" id="${field.fieldName}" name="${field.fieldName}"
-                            value="${fieldValue}">`;
-                    }
-
-                    fieldsHtml += '</div></div>';
-                });
-
-                fieldsHtml += '</div>';
-                $('#dynamicFields').html(fieldsHtml);
-            },
-            error: function(xhr) {
-                console.error('동적 필드 로드 실패:', xhr.responseText);
-            }
-        });
+        $('#dynamicFields').empty();
     }
 
     // 기존 이미지 로드
@@ -741,68 +700,32 @@
                     $('#longitude').val(result.x);
                     console.log('좌표 설정 완료:', result.y, result.x);
                 } else {
-                    // 좌표를 찾을 수 없는 경우 기본값 설정 (창원시청 좌표)
-                    $('#latitude').val('35.2276');
-                    $('#longitude').val('128.6811');
+                    // 좌표를 찾을 수 없는 경우 null로 저장
+                    $('#latitude').val('');
+                    $('#longitude').val('');
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
                             icon: 'warning',
                             title: '알림',
-                            text: '정확한 좌표를 찾을 수 없어 기본 좌표로 설정됩니다.',
+                            text: '정확한 좌표를 찾을 수 없습니다.',
                             timer: 2000
                         });
                     }
+                    console.log('좌표를 찾을 수 없어 null로 저장');
                 }
             },
             error: function() {
-                // API 호출 실패시 기본 좌표 사용
-                $('#latitude').val('35.2276');
-                $('#longitude').val('128.6811');
-                console.log('좌표 API 호출 실패, 기본 좌표 사용');
+                // API 호출 실패시 null로 저장
+                $('#latitude').val('');
+                $('#longitude').val('');
+                console.log('좌표 API 호출 실패, null로 저장');
             }
         });
     }
 
     // 동적 필드 로드
     function loadDynamicFields(propertyType) {
-        $.ajax({
-            url: '/api/v1/admin/properties/property-type-fields',
-            method: 'GET',
-            data: { type: propertyType },
-            success: function(response) {
-                let fieldsHtml = '<div class="row">';
-
-                response.fields.forEach(function(field, index) {
-                    if (index % 2 === 0 && index > 0) {
-                        fieldsHtml += '</div><div class="row">';
-                    }
-
-                    fieldsHtml += `<div class="col-md-6">
-                        <div class="form-group">
-                            <label for="${field.fieldName}">${field.displayName}</label>`;
-
-                    if (field.fieldType === 'SELECT') {
-                        fieldsHtml += `<select class="form-control" id="${field.fieldName}" name="${field.fieldName}">
-                            <option value="">선택하세요</option>`;
-                        field.options.forEach(function(option) {
-                            fieldsHtml += `<option value="${option}">${option}</option>`;
-                        });
-                        fieldsHtml += '</select>';
-                    } else {
-                        fieldsHtml += `<input type="${field.fieldType.toLowerCase()}"
-                            class="form-control" id="${field.fieldName}" name="${field.fieldName}">`;
-                    }
-
-                    fieldsHtml += '</div></div>';
-                });
-
-                fieldsHtml += '</div>';
-                $('#dynamicFields').html(fieldsHtml);
-            },
-            error: function(xhr) {
-                console.error('동적 필드 로드 실패:', xhr.responseText);
-            }
-        });
+        $('#dynamicFields').empty();
     }
 
     // 새 이미지 업로드

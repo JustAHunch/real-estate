@@ -136,44 +136,6 @@ public class PropertyResource {
     }
 
     /**
-     * 매물 타입별 추가 필드 조회
-     */
-    @GetMapping("/property-type-fields")
-    public ResponseEntity<Map<String, Object>> getPropertyTypeFields(
-            @RequestParam String type) {
-        try {
-            PropertyType propertyType = PropertyType.valueOf(type.toUpperCase());
-            Map<String, Object> response = new HashMap<>();
-
-            // 필드 정보를 더 상세하게 제공
-            List<Map<String, Object>> fieldDetails = propertyType.getFields().stream()
-                    .map(field -> {
-                        Map<String, Object> fieldInfo = new HashMap<>();
-                        fieldInfo.put("displayName", field.getDisplayName());
-                        fieldInfo.put("fieldName", field.getFieldName());
-                        fieldInfo.put("fieldType", field.getFieldType());
-                        fieldInfo.put("options", Arrays.asList(field.getOptionArray()));
-                        return fieldInfo;
-                    })
-                    .collect(Collectors.toList());
-
-            response.put("fields", fieldDetails);
-            response.put("displayNames", propertyType.getFieldDisplayNames());
-            response.put("fieldNames", propertyType.getFieldNames());
-
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            log.error("잘못된 매물 타입: {}", type);
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", "잘못된 매물 타입입니다.");
-            errorResponse.put("validTypes", Arrays.stream(PropertyType.values())
-                    .map(Enum::name)
-                    .toList());
-            return ResponseEntity.badRequest().body(errorResponse);
-        }
-    }
-
-    /**
      * 통계 - 전체 매물 개수
      */
     @GetMapping("/statistics/total-count")

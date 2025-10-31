@@ -26,18 +26,53 @@ public class CompanyInfo extends BaseEntity {
     private String businessName;
 
     /**
-     * 주소
+     * 우편번호
      */
-    @Column(name = "address1", length = 500)
-    @Comment("주소")
-    private String address1;
+    @Column(name = "postal_code", length = 10)
+    @Comment("우편번호")
+    private String postalCode;
 
     /**
-     * 상세주소
+     * 도로명 주소
      */
-    @Column(name = "address2", length = 500)
-    @Comment("상세주소")
-    private String address2;
+    @Column(name = "road_address", length = 500)
+    @Comment("도로명 주소")
+    private String roadAddress;
+
+    /**
+     * 지번 주소
+     */
+    @Column(name = "jibun_address", length = 500)
+    @Comment("지번 주소")
+    private String jibunAddress;
+
+    /**
+     * 주소 (기존 필드, 호환성 유지)
+     */
+    @Column(name = "address", nullable = false, length = 500)
+    @Comment("기본 주소")
+    private String address;
+
+    /**
+     * 상세 주소
+     */
+    @Column(name = "detail_address", length = 500)
+    @Comment("상세 주소")
+    private String detailAddress;
+
+    /**
+     * 위도
+     */
+    @Column(name = "latitude")
+    @Comment("위도")
+    private Double latitude;
+
+    /**
+     * 경도
+     */
+    @Column(name = "longitude")
+    @Comment("경도")
+    private Double longitude;
 
     /**
      * 찾아오는 길

@@ -12,8 +12,13 @@ import java.util.Map;
 @AllArgsConstructor
 public class CompanyInfoDTO {
     private String businessName;      // 상호명
-    private String address1;          // 주소
-    private String address2;          // 상세주소
+    private String postalCode;        // 우편번호
+    private String roadAddress;       // 도로명 주소
+    private String jibunAddress;      // 지번 주소
+    private String address;           // 기본 주소
+    private String detailAddress;     // 상세 주소
+    private Double latitude;          // 위도
+    private Double longitude;         // 경도
     private String directions;        // 찾아오는 길
     private String phoneNumber;       // 전화번호
     private String faxNumber;         // 팩스
@@ -33,8 +38,8 @@ public class CompanyInfoDTO {
             errors.put("businessName", "상호명을 입력해주세요");
         }
 
-        if (address1 == null || address1.trim().isEmpty()) {
-            errors.put("address1", "주소를 입력해주세요");
+        if (address == null || address.trim().isEmpty()) {
+            errors.put("address", "주소를 입력해주세요");
         }
 
         if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
@@ -56,9 +61,9 @@ public class CompanyInfoDTO {
      * 전체 주소 반환
      */
     public String getFullAddress() {
-        if (address2 != null && !address2.trim().isEmpty()) {
-            return address1 + " " + address2;
+        if (detailAddress != null && !detailAddress.trim().isEmpty()) {
+            return address + " " + detailAddress;
         }
-        return address1;
+        return address;
     }
 }

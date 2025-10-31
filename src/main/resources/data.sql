@@ -2,11 +2,12 @@
 DELETE FROM company_info;
 
 INSERT INTO company_info (id, created_at, updated_at,
-                                                           business_name, address1, address2, directions,
+                                                           business_name, address, jibun_address, detail_address, directions,
                                                            phone_number, fax_number,
                                                            manager_position, manager_name, manager_phone, manager_email, manager_photo)
                                  VALUES ('c0a80001-0000-0000-0000-000000000001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
                                          '범 공인중개사사무소 / 삼진종합 건축사무소',
+                                         '경남 창원시 성산구 대원동 36-5',
                                          '경남 창원시 성산구 대원동 36-5',
                                          '경남 창원시 성산구 대원로 87 센트럴스퀘어 104호 농협은행앞',
                                          '대원초등학교 도보 1분 센트럴스퀘어 104호 농협은행앞',

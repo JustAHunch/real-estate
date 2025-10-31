@@ -67,25 +67,41 @@
 
                                 <!-- 주소 정보 섹션 -->
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="address1">주소 <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                            <label for="address">주소 <span class="text-danger">*</span></label>
+                                            <div class="input-group mb-2">
+                                                <input type="text" class="form-control" id="postalCode" name="postalCode"
+                                                       placeholder="우편번호" readonly>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-warning" type="button" id="searchAddress">
+                                                        <i class="fas fa-search"></i> 주소 검색
+                                                    </button>
                                                 </div>
-                                                <input type="text" class="form-control" id="address1" name="address1" required>
                                             </div>
+                                            <input type="text" class="form-control mb-2" id="roadAddress" name="roadAddress"
+                                                   placeholder="도로명 주소" readonly required>
+                                            <input type="text" class="form-control mb-2" id="jibunAddress" name="jibunAddress"
+                                                   placeholder="지번 주소" readonly>
+                                            <!-- Hidden field for address (roadAddress 또는 jibunAddress 값) -->
+                                            <input type="hidden" id="address" name="address">
+                                            <!-- Hidden fields for coordinates -->
+                                            <input type="hidden" id="latitude" name="latitude">
+                                            <input type="hidden" id="longitude" name="longitude">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="address2">상세주소</label>
+                                            <label for="detailAddress">상세주소</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" id="address2" name="address2">
+                                                <input type="text" class="form-control" id="detailAddress" name="detailAddress"
+                                                       placeholder="상세 주소를 입력하세요 (예: 201호)">
                                             </div>
                                         </div>
                                     </div>
@@ -216,6 +232,9 @@
 </div>
 
 <th:block layout:fragment="scripts">
+<!-- Daum Postcode API -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script>
 /*<![CDATA[*/
 $(document).ready(function() {
@@ -250,8 +269,13 @@ $(document).ready(function() {
         // 폼 데이터를 JSON 객체로 변환
         const companyData = {
             businessName: $('#businessName').val(),
-            address1: $('#address1').val(),
-            address2: $('#address2').val(),
+            postalCode: $('#postalCode').val(),
+            roadAddress: $('#roadAddress').val(),
+            jibunAddress: $('#jibunAddress').val(),
+            address: $('#address').val(),
+            detailAddress: $('#detailAddress').val(),
+            latitude: $('#latitude').val() ? parseFloat($('#latitude').val()) : null,
+            longitude: $('#longitude').val() ? parseFloat($('#longitude').val()) : null,
             directions: $('#directions').val(),
             phoneNumber: $('#phoneNumber').val(),
             faxNumber: $('#faxNumber').val(),
@@ -326,6 +350,29 @@ $(document).ready(function() {
     $('#uploadPhoto').on('click', function() {
         $('#managerPhoto').click();
     });
+
+    // 주소 검색 초기화
+    $('#searchAddress').on('click', function() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 우편번호와 주소 정보를 입력
+                $('#postalCode').val(data.zonecode);
+                $('#roadAddress').val(data.roadAddress);
+                $('#jibunAddress').val(data.jibunAddress);
+
+                // 기본 주소 선택 (도로명 우선, 없으면 지번)
+                const baseAddress = data.roadAddress || data.jibunAddress;
+                $('#address').val(baseAddress);
+                $('#roadAddress').removeClass('is-invalid');
+
+                // 좌표 변환
+                getCoordinates(baseAddress);
+
+                // 상세주소 입력란으로 포커스 이동
+                $('#detailAddress').focus();
+            }
+        }).open();
+    });
 });
 
 // 회사 정보 로드 함수
@@ -336,8 +383,16 @@ function loadCompanyInfo() {
         success: function(data) {
             // 폼 필드에 데이터 채우기
             $('#businessName').val(data.businessName || '');
-            $('#address1').val(data.address1 || '');
-            $('#address2').val(data.address2 || '');
+
+            // 주소 관련 필드
+            $('#postalCode').val(data.postalCode || '');
+            $('#roadAddress').val(data.roadAddress || '');
+            $('#jibunAddress').val(data.jibunAddress || '');
+            $('#address').val(data.address || '');
+            $('#detailAddress').val(data.detailAddress || '');
+            $('#latitude').val(data.latitude || '');
+            $('#longitude').val(data.longitude || '');
+
             $('#directions').val(data.directions || '');
             $('#phoneNumber').val(data.phoneNumber || '');
             $('#faxNumber').val(data.faxNumber || '');
@@ -360,7 +415,7 @@ function loadCompanyInfo() {
 }
 
 function validateForm() {
-    const requiredFields = ['businessName', 'phoneNumber', 'address1', 'managerName', 'managerPhone'];
+    const requiredFields = ['businessName', 'phoneNumber', 'address', 'managerName', 'managerPhone'];
     let isValid = true;
 
     requiredFields.forEach(function(fieldName) {
@@ -393,6 +448,47 @@ function resetForm() {
         $('.custom-file-label').removeClass("selected").html("파일 선택");
         $('.form-control').removeClass('is-invalid');
     }
+}
+
+// 좌표 가져오기 (Kakao Maps Geocoder 사용)
+function getCoordinates(address) {
+    $.ajax({
+        url: 'https://dapi.kakao.com/v2/local/search/address.json',
+        type: 'GET',
+        headers: {
+            'Authorization': 'f6bac5696b9306e5fb34acef74db15b1'
+        },
+        data: {
+            query: address
+        },
+        success: function(response) {
+            if (response.documents && response.documents.length > 0) {
+                const result = response.documents[0];
+                $('#latitude').val(result.y);
+                $('#longitude').val(result.x);
+                console.log('좌표 설정 완료:', result.y, result.x);
+            } else {
+                // 좌표를 찾을 수 없는 경우 null로 저장
+                $('#latitude').val('');
+                $('#longitude').val('');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '알림',
+                        text: '정확한 좌표를 찾을 수 없습니다.',
+                        timer: 2000
+                    });
+                }
+                console.log('좌표를 찾을 수 없어 null로 저장');
+            }
+        },
+        error: function() {
+            // API 호출 실패시 null로 저장
+            $('#latitude').val('');
+            $('#longitude').val('');
+            console.log('좌표 API 호출 실패, null로 저장');
+        }
+    });
 }
 /*]]>*/
 </script>
